@@ -1,9 +1,18 @@
 package org.example;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import javax.print.Doc;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 public class Database {
     private static final String PATH = System.getProperty("user.home") + "/.hms/";
+    private final Gson gson;
 
     public Database() {
         // if the directory does not exist, create it
@@ -13,8 +22,21 @@ public class Database {
                 throw new RuntimeException("Could not create directory: " + PATH);
             }
         }
-        // create the JSON files if they do not exist
-        File doctors = new File(PATH + "doctors.json");
+
+        // create the doctors.json file if it does not exist
+        File doctorsFile = new File(PATH + "doctors.json");
+        if (!doctorsFile.exists()) {
+            try {
+                if(!doctorsFile.createNewFile()) {
+                    throw new RuntimeException("Could not create file: " + PATH + "doctors.json");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // initialize gson
+        gson = new Gson();
     }
 
     public void addObject(UserTypes type, Object object) {
@@ -29,7 +51,28 @@ public class Database {
         }
     }
 
-    public static void main(String[] args) {
+    public ArrayList<Doctor> getAllDoctors() throws FileNotFoundException {
+        // get contents of doctors file as a string
+        String contents = FileIO.readFile("doctors");
+        System.out.println(contents);
+        if (contents == null || contents.isEmpty()) {
+            return new ArrayList<>();
+        }
+        Type doctorListType = new TypeToken<ArrayList<Doctor>>(){}.getType();
+        return gson.fromJson(contents, doctorListType);
+    }
+
+    public void addDoctor(Doctor doctor) throws IOException {
+        // get all doctors
+        ArrayList<Doctor> doctors = getAllDoctors();
+        // add new doctor
+        doctors.add(doctor);
+        // write to file
+        FileIO.writeFile("doctors", gson.toJson(doctors));
+    }
+
+    public static void main(String[] args) throws IOException {
         Database db = new Database();
+        db.addDoctor(new Doctor(1, "Suyash Saxena", "Ornithology", 1));
     }
 }

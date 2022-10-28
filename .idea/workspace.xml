@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9fccada8-ca2b-4979-9a4c-bbe640bc15bc" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/Database.java" afterDir="false" />
+    <list default="true" id="9fccada8-ca2b-4979-9a4c-bbe640bc15bc" name="Changes" comment="Add Database to work with JSON files that will act as database">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/FileIO.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/resources/json/Doctors.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Database.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,6 +18,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Enum" />
         <option value="Class" />
       </list>
     </option>
@@ -71,6 +73,21 @@
       <option name="presentableId" value="Default" />
       <updated>1666728336741</updated>
     </task>
+    <task id="LOCAL-00001" summary="Add UserTypes enum">
+      <created>1666900549504</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1666900549504</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Add Database to work with JSON files that will act as database">
+      <created>1666900591782</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1666900591782</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -83,5 +100,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Add UserTypes enum" />
+    <MESSAGE value="Add Database to work with JSON files that will act as database" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add Database to work with JSON files that will act as database" />
   </component>
 </project>
