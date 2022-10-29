@@ -42,7 +42,6 @@ public class Database {
         // get contents of doctors file as a string
         String contents = FileIO.readFile("doctors");
         if (contents.isEmpty() || contents.equals("null")) {
-            System.out.println("contents is null or empty");
             return new ArrayList<>();
         }
         Type doctorListType = new TypeToken<ArrayList<Doctor>>(){}.getType();
