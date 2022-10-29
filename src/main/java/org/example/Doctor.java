@@ -1,13 +1,16 @@
 package org.example;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class Doctor {
-    private int id;
+    private final int id;
     private String name;
     private String specialization;
     private int hospitalId;
+    private static final AtomicInteger count = new AtomicInteger(0);
 
-    public Doctor(int id, String name, String specialization, int hospitalId) {
-        this.id = id;
+    public Doctor(String name, String specialization, int hospitalId) {
+        this.id = count.incrementAndGet();
         this.name = name;
         this.specialization = specialization;
         this.hospitalId = hospitalId;
