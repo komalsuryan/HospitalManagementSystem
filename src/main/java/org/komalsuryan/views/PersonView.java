@@ -1,6 +1,8 @@
-package org.example;
+package org.komalsuryan.views;
 
-import org.example.personViewUiElements.PersonDoctorBlock;
+import org.komalsuryan.Database;
+import org.komalsuryan.Doctor;
+import org.komalsuryan.views.personViewUiElements.PersonDoctorBlock;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,7 +22,7 @@ public class PersonView {
     private JPanel findDoctorsSearchPanel;
     private JLabel findDoctorsSearchLabel;
     private JTextField findDoctorsSearchText;
-    private Database db;
+    private final Database db;
 
     public PersonView(int id) throws IOException {
         db = new Database();
@@ -32,7 +34,7 @@ public class PersonView {
         createDoctorBlocks();
     }
 
-    private void createDoctorBlocks() throws IOException {
+    private void createDoctorBlocks() {
         ArrayList<Doctor> doctors = db.getAllDoctors();
         findDoctorsPanel.setLayout(new BoxLayout(findDoctorsPanel, BoxLayout.X_AXIS));
         for (Doctor doctor : doctors) {
