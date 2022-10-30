@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.File;
 import java.lang.reflect.Type;
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
@@ -26,6 +27,7 @@ public class Database {
         gson = new GsonBuilder()
                 .registerTypeAdapter(LocalTime.class, new LocalTimeAdapter())
                 .registerTypeAdapter(DayOfWeek.class, new DayOfWeekAdapter())
+                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
                 .setPrettyPrinting()
                 .create();
 
@@ -37,6 +39,12 @@ public class Database {
 
         // create the doctors.json file if it does not exist
         FileIO.createFile("doctors");
+
+        // create the patients.json file if it does not exist
+        FileIO.createFile("patients");
+
+        // create the appointments.json file if it does not exist
+        FileIO.createFile("appointments");
     }
 
     //region Doctor Methods
@@ -200,6 +208,126 @@ public class Database {
         FileIO.writeFile("hospitals", gson.toJson(hospitals));
     }
     //endregion
+
+    //region Patient Methods
+    public ArrayList<Patient> getAllPatients() {
+        // get contents of patients file as a string
+        String contents = FileIO.readFile("patients");
+        if (contents.isEmpty() || contents.equals("null")) {
+            return new ArrayList<>();
+        }
+        Type patientListType = new TypeToken<ArrayList<Patient>>(){}.getType();
+        return gson.fromJson(contents, patientListType);
+    }
+
+    public Patient getPatient(int id) {
+        ArrayList<Patient> patients = getAllPatients();
+        for (Patient patient : patients) {
+            if (patient.getId() == id) {
+                return patient;
+            }
+        }
+        return null;
+    }
+
+    public void addPatient(Patient patient) {
+        // get all patients
+        ArrayList<Patient> patients = getAllPatients();
+        // add new patient
+        patients.add(patient);
+        // write to file
+        FileIO.writeFile("patients", gson.toJson(patients));
+    }
+
+    public void removePatient(int id) {
+        // get all patients
+        ArrayList<Patient> patients = getAllPatients();
+        // remove patient with id
+        patients.removeIf(patient -> patient.getId() == id);
+        // write to file
+        FileIO.writeFile("patients", gson.toJson(patients));
+    }
+    //endregion
+
+    //region Person Methods
+    public ArrayList<Person> getAllPeople() {
+        // get contents of people file as a string
+        String contents = FileIO.readFile("people");
+        if (contents.isEmpty() || contents.equals("null")) {
+            return new ArrayList<>();
+        }
+        Type personListType = new TypeToken<ArrayList<Person>>(){}.getType();
+        return gson.fromJson(contents, personListType);
+    }
+
+    public Person getPerson(String ssNumber) {
+        ArrayList<Person> people = getAllPeople();
+        for (Person person : people) {
+            if (person.getSsNumber().equals(ssNumber)) {
+                return person;
+            }
+        }
+        return null;
+    }
+
+    public void addPerson(Person person) {
+        // get all people
+        ArrayList<Person> people = getAllPeople();
+        // add new person
+        people.add(person);
+        // write to file
+        FileIO.writeFile("people", gson.toJson(people));
+    }
+
+    public void removePerson(String ssNumber) {
+        // get all people
+        ArrayList<Person> people = getAllPeople();
+        // remove person with ssNumber
+        people.removeIf(person -> person.getSsNumber().equals(ssNumber));
+        // write to file
+        FileIO.writeFile("people", gson.toJson(people));
+    }
+    //endregion
+
+    //region Appointment Methods
+    public ArrayList<Appointment> getAllAppointments() {
+        // get contents of appointments file as a string
+        String contents = FileIO.readFile("appointments");
+        if (contents.isEmpty() || contents.equals("null")) {
+            return new ArrayList<>();
+        }
+        Type appointmentListType = new TypeToken<ArrayList<Appointment>>(){}.getType();
+        return gson.fromJson(contents, appointmentListType);
+    }
+
+    public Appointment getAppointment(int id) {
+        ArrayList<Appointment> appointments = getAllAppointments();
+        for (Appointment appointment : appointments) {
+            if (appointment.getId() == id) {
+                return appointment;
+            }
+        }
+        return null;
+    }
+
+    public void addAppointment(Appointment appointment) {
+        // get all appointments
+        ArrayList<Appointment> appointments = getAllAppointments();
+        // add new appointment
+        appointments.add(appointment);
+        // write to file
+        FileIO.writeFile("appointments", gson.toJson(appointments));
+    }
+
+    public void removeAppointment(int id) {
+        // get all appointments
+        ArrayList<Appointment> appointments = getAllAppointments();
+        // remove appointment with id
+        appointments.removeIf(appointment -> appointment.getId() == id);
+        // write to file
+        FileIO.writeFile("appointments", gson.toJson(appointments));
+    }
+    //endregion
 }
 
 class LocalTimeAdapter implements JsonSerializer<LocalTime>, JsonDeserializer<LocalTime> {
@@ -223,5 +351,17 @@ class DayOfWeekAdapter implements JsonSerializer<DayOfWeek>, JsonDeserializer<Da
     @Override
     public DayOfWeek deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         return DayOfWeek.valueOf(jsonElement.getAsString());
+    }
+}
+
+class LocalDateAdapter implements JsonSerializer<LocalDate>, JsonDeserializer<LocalDate> {
+    @Override
+    public JsonElement serialize(LocalDate localDate, Type type, JsonSerializationContext jsonSerializationContext) {
+        return new JsonPrimitive(localDate.toString());
+    }
+
+    @Override
+    public LocalDate deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+        return LocalDate.parse(jsonElement.getAsString());
     }
 }
