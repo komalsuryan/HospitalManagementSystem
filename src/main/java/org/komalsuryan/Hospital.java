@@ -58,8 +58,9 @@ public class Hospital {
     public void setCommunityId(int communityId) {
         if (checkCommunityId(communityId)) {
             this.communityId = communityId;
+        } else {
+            throw new IllegalArgumentException("Community ID is not valid or does not exist");
         }
-        throw new IllegalArgumentException("The community ID is not valid or does not exist");
     }
 
     public boolean isClinic() {
