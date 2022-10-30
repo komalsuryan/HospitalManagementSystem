@@ -3,6 +3,7 @@ package org.komalsuryan;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
+import javax.print.Doc;
 import java.io.File;
 import java.lang.reflect.Type;
 import java.time.DayOfWeek;
@@ -68,6 +69,17 @@ public class Database {
         return null;
     }
 
+    public ArrayList<Doctor> getDoctors(String search) {
+        ArrayList<Doctor> doctors = getAllDoctors();
+        ArrayList<Doctor> results = new ArrayList<>();
+        for (Doctor doctor : doctors) {
+            if (doctor.getName().contains(search) || doctor.getSpecialization().contains(search)) {
+                results.add(doctor);
+            }
+        }
+        return results;
+    }
+
     public void addDoctor(Doctor doctor) {
         // get all doctors
         ArrayList<Doctor> doctors = getAllDoctors();
@@ -120,6 +132,17 @@ public class Database {
             }
         }
         return null;
+    }
+
+    public ArrayList<Community> getCommunities(String search) {
+        ArrayList<Community> communities = getAllCommunities();
+        ArrayList<Community> results = new ArrayList<>();
+        for (Community community : communities) {
+            if (community.getName().toLowerCase().contains(search.toLowerCase())) {
+                results.add(community);
+            }
+        }
+        return results;
     }
 
     public void addCommunity(Community community) {
@@ -176,6 +199,17 @@ public class Database {
         return null;
     }
 
+    public ArrayList<Hospital> getHospitals(String search) {
+        ArrayList<Hospital> hospitals = getAllHospitals();
+        ArrayList<Hospital> results = new ArrayList<>();
+        for (Hospital hospital : hospitals) {
+            if (hospital.getName().toLowerCase().contains(search.toLowerCase())) {
+                results.add(hospital);
+            }
+        }
+        return results;
+    }
+
     public void addHospital(Hospital hospital) {
         // get all hospitals
         ArrayList<Hospital> hospitals = getAllHospitals();
@@ -186,6 +220,13 @@ public class Database {
     }
 
     public void removeHospital(int id) {
+        // do not remove if hospital has doctors or patients
+        ArrayList<Doctor> doctors = getAllDoctors();
+        for (Doctor doctor : doctors) {
+            if (doctor.getHospitalId() == id) {
+                throw new RuntimeException("Cannot remove hospital with doctors");
+            }
+        }
         // get all hospitals
         ArrayList<Hospital> hospitals = getAllHospitals();
         // remove hospital with id
