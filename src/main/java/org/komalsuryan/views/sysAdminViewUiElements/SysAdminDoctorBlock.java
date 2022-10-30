@@ -8,7 +8,6 @@ import javax.swing.*;
 public class SysAdminDoctorBlock {
     private JPanel mainPanel;
     private JLabel doctorNameLabel;
-    private JButton viewDoctorbutton;
     private JButton editDoctorButton;
     private JButton deleteDoctorButton;
     private JLabel doctorSpecializationLabel;
@@ -26,12 +25,19 @@ public class SysAdminDoctorBlock {
         doctorHospitalValue.setText(new Database().getHospital(doctor.getHospitalId()).getName());
         doctorHoursAvailable.setText("Hours available");
         doctorHoursAvailableValue.setText(doctor.getStartTime().toString() + " - " + doctor.getEndTime().toString());
-        viewDoctorbutton.setText("View Details");
         editDoctorButton.setText("Edit");
         deleteDoctorButton.setText("Delete");
     }
     public JPanel getMainPanel() {
         return mainPanel;
+    }
+
+    public JButton getEditButton() {
+        return editDoctorButton;
+    }
+
+    public JButton getDeleteButton() {
+        return deleteDoctorButton;
     }
 
 }

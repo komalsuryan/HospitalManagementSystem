@@ -34,4 +34,12 @@ public class SysAdminHospitalBlock {
     public JPanel getMainPanel() {
         return mainPanel;
     }
+
+    public JButton getEditButton() {
+        return editbutton;
+    }
+
+    public JButton getDeleteButton() {
+        return deleteButton;
+    }
 }

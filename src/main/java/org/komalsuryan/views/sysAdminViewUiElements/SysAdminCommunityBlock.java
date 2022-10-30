@@ -1,6 +1,7 @@
 package org.komalsuryan.views.sysAdminViewUiElements;
 
 import org.komalsuryan.Community;
+import org.komalsuryan.Database;
 
 import javax.swing.*;
 
@@ -36,5 +37,13 @@ public class SysAdminCommunityBlock {
 
     public JPanel getMainPanel() {
         return mainPanel;
+    }
+
+    public JButton getEditButton() {
+        return editButton;
+    }
+
+    public JButton getDeleteButton() {
+        return deleteButton;
     }
 }
