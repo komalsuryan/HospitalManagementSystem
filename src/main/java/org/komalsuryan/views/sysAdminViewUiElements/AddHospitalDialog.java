@@ -76,6 +76,7 @@ public class AddHospitalDialog extends JDialog {
         } catch (Exception e) {
             // show dialog with error message
             JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
             return;
         }
         dispose();
