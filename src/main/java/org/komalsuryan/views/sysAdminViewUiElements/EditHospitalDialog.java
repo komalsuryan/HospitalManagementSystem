@@ -89,4 +89,8 @@ public class EditHospitalDialog extends JDialog {
         // add your code here if necessary
         dispose();
     }
+
+    public void setEditHospitalCommunityValueComboBox(ComboBoxModel<String> model) {
+        editHospitalCommunityValueComboBox.setModel(model);
+    }
 }
