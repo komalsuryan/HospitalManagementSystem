@@ -34,7 +34,7 @@ public class Database {
 
         // create the systemAdmin.json file if it does not exist
         FileIO.createFile("systemAdmin");
-        FileIO.writeFile("systemAdmin", "[{\"username\":\"admin\", \"password\":\"admin\"}]");
+        FileIO.writeFile("systemAdmin", "[{\"email\":\"admin@admin.com\", \"password\":\"admin\"}]");
 
         // create the people.json file if it does not exist
         FileIO.createFile("people");
@@ -56,6 +56,45 @@ public class Database {
 
         // create the appointments.json file if it does not exist
         FileIO.createFile("appointments");
+    }
+
+    public int validate(String email, String password, UserTypes type) {
+        if (email == null || password == null || type == null || email.equals("") || password.equals("")) {
+            throw new IllegalArgumentException("Email, password or type cannot be null or empty");
+        }
+        switch (type) {
+            case SYSTEM_ADMIN:
+                if (email.equals("admin@admin.com") && password.equals("admin")) {
+                    return 1;
+                }
+            case COMMUNITY_ADMIN:
+                ArrayList<CommunityAdmin> communityAdmins = getAllCommunityAdmins();
+                for (CommunityAdmin communityAdmin : communityAdmins) {
+                    if (communityAdmin.getEmail().equals(email) && communityAdmin.getPassword().equals(password)) {
+                        return communityAdmin.getId();
+                    }
+                }
+                break;
+            case DOCTOR:
+                ArrayList<Doctor> doctors = getAllDoctors();
+                for (Doctor doctor : doctors) {
+                    if (doctor.getEmail().equals(email) && doctor.getPassword().equals(password)) {
+                        return doctor.getId();
+                    }
+                }
+                break;
+            case PATIENT:
+                ArrayList<Patient> patients = getAllPatients();
+                for (Patient patient : patients) {
+                    if (patient.getEmail().equals(email) && patient.getPassword().equals(password)) {
+                        return patient.getId();
+                    }
+                }
+                break;
+            default:
+                return -1;
+        }
+        return -1;
     }
 
     //region CommunityAdmin Methods
