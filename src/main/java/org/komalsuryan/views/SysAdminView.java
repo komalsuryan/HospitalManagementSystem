@@ -57,6 +57,17 @@ public class SysAdminView {
     private JLabel findCommunityAdminSearchLabel;
     private JTextField findCommunityAdminSearchText;
     private JButton addCommunityAdminButton;
+    private JPanel patientPanel;
+    private JPanel findPatientsPanel;
+    private JLabel findPatientHeadingLabel;
+    private JLabel findPatientSearchLabel;
+    private JTextField findPatientSearchText;
+    private JPanel appointmentPanel;
+    private JLabel appointmentPanelHeading;
+    private JLabel findAppointmentSearchLabel;
+    private JTextField findAppointmentSearchText;
+    private JButton addAppointment;
+    private JPanel findAppointmentsPanel;
     private final Database db;
 
     public SysAdminView() {
@@ -181,11 +192,53 @@ public class SysAdminView {
             }
         });
 
+        // patient panel
+        findPatientHeadingLabel.setText("Patients");
+        findPatientSearchLabel.setText("Search");
+        findPatientSearchText.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                String search = findPatientSearchText.getText();
+                if (search.equals("")) {
+                    createPatientBlocks();
+                } else {
+                    createPatientBlocks(search);
+                }
+            }
+        });
+
+        // appointment panel
+        appointmentPanelHeading.setText("Appointments");
+        findAppointmentSearchLabel.setText("Search");
+        addAppointment.setText("Add Appointment");
+        addAppointment.addActionListener(e -> {
+            AddAppointmentDialog addAppointmentDialog = new AddAppointmentDialog(false);
+            addAppointmentDialog.pack();
+            addAppointmentDialog.setVisible(true);
+            createAppointmentBlocks();
+            createPatientBlocks();
+        });
+        findAppointmentSearchText.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                String search = findAppointmentSearchText.getText();
+                if (search.equals("")) {
+                    createAppointmentBlocks();
+                } else {
+                    createAppointmentBlocks(search);
+                }
+            }
+        });
+
         createCommunityBlocks();
         createPeopleBlocks();
         createCommunityAdminBlocks();
         createHospitalBlocks();
         createDoctorBlocks();
+        createPatientBlocks();
+        createAppointmentBlocks();
     }
 
     public void createCommunityBlocks() {
@@ -518,6 +571,152 @@ public class SysAdminView {
         }
         findDoctorsPanel.revalidate();
         findDoctorsPanel.repaint();
+    }
+
+    public void createPatientBlocks() {
+        findPatientsPanel.removeAll();
+        ArrayList<Patient> patients = db.getAllPatients();
+        if (patients.size() == 0) {
+            findPatientsPanel.setLayout(new GridLayout());
+            findPatientsPanel.add(new JLabel("No patients found"));
+        } else {
+            findPatientsPanel.setLayout(new BoxLayout(findPatientsPanel, BoxLayout.X_AXIS));
+            for (Patient patient : patients) {
+                SysAdminPatientBlock patientBlock = new SysAdminPatientBlock(patient);
+                findPatientsPanel.add(patientBlock.getMainPanel());
+                patientBlock.getDeleteButton().addActionListener(e -> {
+                    // dialog to confirm deletion
+                    int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this patient?", "Warning", JOptionPane.YES_NO_OPTION);
+                    if (dialogResult == JOptionPane.YES_OPTION) {
+                        try {
+                            db.removePatient(patient.getId());
+                            createPatientBlocks();
+                        } catch (Exception ex) {
+                            JOptionPane.showMessageDialog(null, ex.getMessage());
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+                patientBlock.getEditButton().addActionListener(e -> {
+                    EditPatientDialog editPatientDialog = new EditPatientDialog(patient);
+                    editPatientDialog.pack();
+                    editPatientDialog.setVisible(true);
+                    createPatientBlocks();
+                });
+            }
+        }
+        findPatientsPanel.revalidate();
+        findPatientsPanel.repaint();
+    }
+
+    public void createPatientBlocks(String search) {
+        ArrayList<Patient> patients = new Database().getPatients(search);
+        findPatientsPanel.removeAll();
+        if (patients.size() == 0) {
+            findPatientsPanel.setLayout(new GridLayout());
+            findPatientsPanel.add(new JLabel("No patients found for the search term"));
+        } else {
+            findPatientsPanel.setLayout(new BoxLayout(findPatientsPanel, BoxLayout.X_AXIS));
+            for (Patient patient : patients) {
+                SysAdminPatientBlock patientBlock = new SysAdminPatientBlock(patient);
+                findPatientsPanel.add(patientBlock.getMainPanel());
+                patientBlock.getDeleteButton().addActionListener(e -> {
+                    // dialog to confirm deletion
+                    int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this patient?", "Warning", JOptionPane.YES_NO_OPTION);
+                    if (dialogResult == JOptionPane.YES_OPTION) {
+                        try {
+                            db.removePatient(patient.getId());
+                        } catch (Exception ex) {
+                            JOptionPane.showMessageDialog(null, ex.getMessage());
+                            ex.printStackTrace();
+                            return;
+                        }
+                        createPatientBlocks(search);
+                    }
+                });
+                patientBlock.getEditButton().addActionListener(e -> {
+                    EditPatientDialog editPatientDialog = new EditPatientDialog(patient);
+                    editPatientDialog.pack();
+                    editPatientDialog.setVisible(true);
+                    createPatientBlocks(search);
+                });
+            }
+        }
+        findPatientsPanel.revalidate();
+        findPatientsPanel.repaint();
+    }
+
+    public void createAppointmentBlocks() {
+        findAppointmentsPanel.removeAll();
+        ArrayList<Appointment> appointments = db.getAllAppointments();
+        if (appointments.size() == 0) {
+            findAppointmentsPanel.setLayout(new GridLayout());
+            findAppointmentsPanel.add(new JLabel("No appointments found"));
+        } else {
+            findAppointmentsPanel.setLayout(new BoxLayout(findAppointmentsPanel, BoxLayout.X_AXIS));
+            for (Appointment appointment : appointments) {
+                SysAdminAppointmentBlock appointmentBlock = new SysAdminAppointmentBlock(appointment);
+                findAppointmentsPanel.add(appointmentBlock.getMainPanel());
+                appointmentBlock.getDeleteButton().addActionListener(e -> {
+                    // dialog to confirm deletion
+                    int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this appointment?", "Warning", JOptionPane.YES_NO_OPTION);
+                    if (dialogResult == JOptionPane.YES_OPTION) {
+                        try {
+                            db.removeAppointment(appointment.getId());
+                            createAppointmentBlocks();
+                        } catch (Exception ex) {
+                            JOptionPane.showMessageDialog(null, ex.getMessage());
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+                appointmentBlock.getEditButton().addActionListener(e -> {
+                    AddAppointmentDialog editAppointmentDialog = new AddAppointmentDialog(appointment, false);
+                    editAppointmentDialog.pack();
+                    editAppointmentDialog.setVisible(true);
+                    createAppointmentBlocks();
+                });
+            }
+        }
+        findAppointmentsPanel.revalidate();
+        findAppointmentsPanel.repaint();
+    }
+
+    public void createAppointmentBlocks(String search) {
+        ArrayList<Appointment> appointments = new Database().getAppointments(search);
+        findAppointmentsPanel.removeAll();
+        if (appointments.size() == 0) {
+            findAppointmentsPanel.setLayout(new GridLayout());
+            findAppointmentsPanel.add(new JLabel("No appointments found for the search term"));
+        } else {
+            findAppointmentsPanel.setLayout(new BoxLayout(findAppointmentsPanel, BoxLayout.X_AXIS));
+            for (Appointment appointment : appointments) {
+                SysAdminAppointmentBlock appointmentBlock = new SysAdminAppointmentBlock(appointment);
+                findAppointmentsPanel.add(appointmentBlock.getMainPanel());
+                appointmentBlock.getDeleteButton().addActionListener(e -> {
+                    // dialog to confirm deletion
+                    int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this appointment?", "Warning", JOptionPane.YES_NO_OPTION);
+                    if (dialogResult == JOptionPane.YES_OPTION) {
+                        try {
+                            db.removeAppointment(appointment.getId());
+                        } catch (Exception ex) {
+                            JOptionPane.showMessageDialog(null, ex.getMessage());
+                            ex.printStackTrace();
+                            return;
+                        }
+                        createAppointmentBlocks(search);
+                    }
+                });
+                appointmentBlock.getEditButton().addActionListener(e -> {
+                    AddAppointmentDialog editAppointmentDialog = new AddAppointmentDialog(appointment, false);
+                    editAppointmentDialog.pack();
+                    editAppointmentDialog.setVisible(true);
+                    createAppointmentBlocks(search);
+                });
+            }
+        }
+        findAppointmentsPanel.revalidate();
+        findAppointmentsPanel.repaint();
     }
 
     public JPanel getMainPanel() {
