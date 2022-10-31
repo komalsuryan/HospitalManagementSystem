@@ -21,6 +21,16 @@ public class Person {
         this.weight = weight;
     }
 
+    public Person(Person person) {
+        this.ssNumber = person.getSsNumber();
+        this.name = person.getName();
+        this.communityId = person.getCommunityId();
+        this.dateOfBirth = person.getDateOfBirth();
+        this.sex = person.getSex();
+        this.height = person.getHeight();
+        this.weight = person.getWeight();
+    }
+
     public String getSsNumber() {
         return ssNumber;
     }
