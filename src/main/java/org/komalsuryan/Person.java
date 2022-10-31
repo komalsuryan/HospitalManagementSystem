@@ -5,13 +5,13 @@ import java.time.LocalDate;
 public class Person {
     private String ssNumber;
     private String name;
-    private String communityId;
+    private int communityId;
     private LocalDate dateOfBirth;
     private String sex;
     private float height;
     private float weight;
 
-    public Person(String ssNumber, String name, String communityId, LocalDate dateOfBirth, String sex, float height, float weight) {
+    public Person(String ssNumber, String name, int communityId, LocalDate dateOfBirth, String sex, float height, float weight) {
         this.ssNumber = ssNumber;
         this.name = name;
         this.communityId = communityId;
@@ -37,11 +37,11 @@ public class Person {
         this.name = name;
     }
 
-    public String getCommunityId() {
+    public int getCommunityId() {
         return communityId;
     }
 
-    public void setCommunityId(String communityId) {
+    public void setCommunityId(int communityId) {
         this.communityId = communityId;
     }
 
