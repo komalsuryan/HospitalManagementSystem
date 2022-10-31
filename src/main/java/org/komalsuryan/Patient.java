@@ -7,7 +7,7 @@ public class Patient extends Person {
     private final int id;
     private String email;
     private String password;
-    private static final AtomicInteger count = new AtomicInteger(new Database().getAllPatients().size());
+    private static final AtomicInteger count = new AtomicInteger(new Database().getMaxPatientId());
     public Patient(String ssNumber, String name, int communityId, LocalDate dateOfBirth, String sex, float height, float weight, String email, String password) {
         super(ssNumber, name, communityId, dateOfBirth, sex, height, weight);
         this.id = count.incrementAndGet();

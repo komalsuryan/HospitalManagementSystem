@@ -16,7 +16,7 @@ public class Appointment {
     private HashMap<String, String> vitals;
     private String diagnosis;
     private String treatment;
-    private static final AtomicInteger count = new AtomicInteger(new Database().getAllAppointments().size());
+    private static final AtomicInteger count = new AtomicInteger(new Database().getMaxAppointmentId());
 
     public Appointment(int patientId, int hospitalId, LocalDate date, int doctorId, LocalTime time, String reason, HashMap<String, String> vitals, String diagnosis, String treatment) {
         this.id = count.incrementAndGet();

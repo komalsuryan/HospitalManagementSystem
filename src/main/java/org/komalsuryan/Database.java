@@ -2,8 +2,8 @@ package org.komalsuryan;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import com.sun.source.doctree.DocCommentTree;
 
-import javax.print.Doc;
 import java.io.File;
 import java.lang.reflect.Type;
 import java.time.DayOfWeek;
@@ -229,6 +229,19 @@ public class Database {
         // write to file
         FileIO.writeFile("doctors", gson.toJson(doctors));
     }
+
+    public int getMaxDoctorId() {
+        // get all doctors
+        ArrayList<Doctor> doctors = getAllDoctors();
+
+        int maxId = 0;
+        for (Doctor doctor: doctors) {
+            if (doctor.getId() > maxId) {
+                maxId = doctor.getId();
+            }
+        }
+        return maxId;
+    }
     //endregion
 
     //region Community Methods
@@ -293,6 +306,19 @@ public class Database {
         }
         // write to file
         FileIO.writeFile("communities", gson.toJson(communities));
+    }
+
+    public int getMaxCommunityId() {
+        // get all communities
+        ArrayList<Community> communities = getAllCommunities();
+
+        int maxId = 0;
+        for (Community community: communities) {
+            if (community.getId() > maxId) {
+                maxId = community.getId();
+            }
+        }
+        return maxId;
     }
     //endregion
 
@@ -365,6 +391,19 @@ public class Database {
         }
         // write to file
         FileIO.writeFile("hospitals", gson.toJson(hospitals));
+    }
+
+    public int getMaxHospitalId() {
+        // get all hospitals
+        ArrayList<Hospital> hospitals = getAllHospitals();
+
+        int maxId = 0;
+        for (Hospital hospital: hospitals) {
+            if (hospital.getId() > maxId) {
+                maxId = hospital.getId();
+            }
+        }
+        return maxId;
     }
     //endregion
 
@@ -443,6 +482,19 @@ public class Database {
         patients.removeIf(patient -> patient.getId() == id);
         // write to file
         FileIO.writeFile("patients", gson.toJson(patients));
+    }
+
+    public int getMaxPatientId() {
+        // get all patients
+        ArrayList<Patient> patients = getAllPatients();
+
+        int maxId = 0;
+        for (Patient patient: patients) {
+            if (patient.getId() > maxId) {
+                maxId = patient.getId();
+            }
+        }
+        return maxId;
     }
     //endregion
 
@@ -587,6 +639,17 @@ public class Database {
         appointments.removeIf(appointment -> appointment.getId() == id);
         // write to file
         FileIO.writeFile("appointments", gson.toJson(appointments));
+    }
+
+    public int getMaxAppointmentId() {
+        ArrayList<Appointment> appointments = getAllAppointments();
+        int maxId = 0;
+        for (Appointment appointment: appointments) {
+            if (appointment.getId() > maxId) {
+                maxId = appointment.getId();
+            }
+        }
+        return maxId;
     }
     //endregion
 }

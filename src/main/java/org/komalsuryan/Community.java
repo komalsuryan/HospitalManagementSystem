@@ -8,7 +8,7 @@ public class Community {
     private String city;
     private String state;
     private String zipCode;
-    private static final AtomicInteger count = new AtomicInteger(new Database().getAllCommunities().size());
+    private static final AtomicInteger count = new AtomicInteger(new Database().getMaxCommunityId());
 
     public Community(String name, String city, String state, String zipCode) {
         this.id = count.incrementAndGet();

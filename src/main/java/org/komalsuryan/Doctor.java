@@ -5,7 +5,7 @@ import java.time.LocalTime;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Doctor {
-    private static final AtomicInteger count = new AtomicInteger(new Database().getAllDoctors().size());
+    private static final AtomicInteger count = new AtomicInteger(new Database().getMaxDoctorId());
     private final int id;
     private String name;
     private String specialization;

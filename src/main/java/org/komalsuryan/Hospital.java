@@ -8,7 +8,7 @@ public class Hospital {
     private String location;
     private int communityId;
     private boolean isClinic;
-    private static final AtomicInteger count = new AtomicInteger(new Database().getAllHospitals().size());
+    private static final AtomicInteger count = new AtomicInteger(new Database().getMaxHospitalId());
 
 
     public Hospital(String name, String location, int communityId, boolean isClinic) {
