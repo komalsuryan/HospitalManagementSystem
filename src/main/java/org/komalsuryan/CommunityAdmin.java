@@ -16,6 +16,23 @@ public class CommunityAdmin extends Person {
         this.password = password;
     }
 
+    public CommunityAdmin(String ssNumber, String email, String password) {
+        super(ssNumber, null, 0, null, null, 0, 0);
+        Person person = new Database().getPerson(ssNumber);
+        if (person == null) {
+            throw new RuntimeException("No person with SSN " + ssNumber + " found. Please register first.");
+        }
+        super.setName(person.getName());
+        super.setCommunityId(person.getCommunityId());
+        super.setDateOfBirth(person.getDateOfBirth());
+        super.setSex(person.getSex());
+        super.setHeight(person.getHeight());
+        super.setWeight(person.getWeight());
+        this.id = count.incrementAndGet();
+        this.email = email;
+        this.password = password;
+    }
+
     public int getId() {
         return id;
     }
