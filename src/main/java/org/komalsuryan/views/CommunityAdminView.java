@@ -49,6 +49,14 @@ public class CommunityAdminView {
         // top panel
         welcomeLabel.setText("Welcome, " + admin.getName() + "(" + community.getName() + ")");
         editCommunityAdminButton.setText("Edit your details");
+        editCommunityAdminButton.addActionListener(e -> {
+            AddCommunityAdminDialog editCommunityAdminDialog = new AddCommunityAdminDialog(communityAdmin);
+            editCommunityAdminDialog.pack();
+            editCommunityAdminDialog.setLocationRelativeTo(null);
+            editCommunityAdminDialog.setVisible(true);
+            communityAdmin = db.getCommunityAdmin(communityAdmin.getId());
+            welcomeLabel.setText("Welcome, " + communityAdmin.getName() + "(" + community.getName() + ")");
+        });
         logoutCommunityAdminButton.setText("Logout");
         editCommunity.setText("Edit Community");
         editCommunity.addActionListener(e -> {
