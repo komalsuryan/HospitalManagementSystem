@@ -1,9 +1,6 @@
 package org.komalsuryan.views;
 
-import org.komalsuryan.Community;
-import org.komalsuryan.Database;
-import org.komalsuryan.Doctor;
-import org.komalsuryan.Hospital;
+import org.komalsuryan.*;
 import org.komalsuryan.views.sysAdminViewUiElements.*;
 
 import javax.swing.*;
@@ -47,6 +44,13 @@ public class SysAdminView {
     private JButton addCommunityButton;
     private JPanel sysAdminViewContentPanel;
     private JScrollPane sysAdminViewContentScrollPane;
+    private JPanel peoplePanel;
+    private JPanel findPeoplePanel;
+    private JLabel findPeopleLabel;
+    private JPanel findPeopleSearchPanel;
+    private JLabel findPeopleSearchLabel;
+    private JTextField findPeopleSearchField;
+    private JButton addPeopleButton;
     private final Database db;
 
     public SysAdminView() {
@@ -75,6 +79,29 @@ public class SysAdminView {
                     createCommunityBlocks();
                 } else {
                     createCommunityBlocks(search);
+                }
+            }
+        });
+
+        // people panel
+        findPeopleLabel.setText("People");
+        findPeopleSearchLabel.setText("Search");
+        addPeopleButton.setText("Add Person");
+        addPeopleButton.addActionListener(e -> {
+            AddPersonDialog addPersonDialog = new AddPersonDialog();
+            addPersonDialog.pack();
+            addPersonDialog.setVisible(true);
+            createPeopleBlocks();
+        });
+        findPeopleSearchField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent e) {
+                super.keyReleased(e);
+                String search = findPeopleSearchField.getText();
+                if (search.equals("")) {
+                    createPeopleBlocks();
+                } else {
+                    createPeopleBlocks(search);
                 }
             }
         });
@@ -126,6 +153,7 @@ public class SysAdminView {
         });
 
         createCommunityBlocks();
+        createPeopleBlocks();
         createHospitalBlocks();
         createDoctorBlocks();
     }
@@ -190,6 +218,68 @@ public class SysAdminView {
         }
         findCommunitiesPanel.revalidate();
         findCommunitiesPanel.repaint();
+    }
+
+    public void createPeopleBlocks() {
+        findPeoplePanel.removeAll();
+        ArrayList<Person> people = db.getAllPeople();
+        if (people.size() == 0) {
+            findPeoplePanel.setLayout(new GridLayout());
+            findPeoplePanel.add(new JLabel("No people found. Add a person to begin"));
+        } else {
+            findPeoplePanel.setLayout(new BoxLayout(findPeoplePanel, BoxLayout.X_AXIS));
+            for (Person person : people) {
+                SysAdminPersonBlock personBlock = new SysAdminPersonBlock(person);
+                personBlock.getDeleteButton().addActionListener(e -> {
+                    // dialog to confirm deletion
+                    int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this person?", "Warning", JOptionPane.YES_NO_OPTION);
+                    if (dialogResult == JOptionPane.YES_OPTION) {
+                        db.removePerson(person.getSsNumber());
+                        createPeopleBlocks();
+                    }
+                });
+                personBlock.getEditButton().addActionListener(e -> {
+                    AddPersonDialog editPersonDialog = new AddPersonDialog(person);
+                    editPersonDialog.pack();
+                    editPersonDialog.setVisible(true);
+                    createPeopleBlocks();
+                });
+                findPeoplePanel.add(personBlock.getMainPanel());
+            }
+        }
+        findPeoplePanel.revalidate();
+        findPeoplePanel.repaint();
+    }
+
+    public void createPeopleBlocks(String search) {
+        ArrayList<Person> people = new Database().getPeople(search);
+        findPeoplePanel.removeAll();
+        if (people.size() == 0) {
+            findPeoplePanel.setLayout(new GridLayout());
+            findPeoplePanel.add(new JLabel("No people found for the search term"));
+        } else {
+            findPeoplePanel.setLayout(new BoxLayout(findPeoplePanel, BoxLayout.X_AXIS));
+            for (Person person : people) {
+                SysAdminPersonBlock personBlock = new SysAdminPersonBlock(person);
+                personBlock.getDeleteButton().addActionListener(e -> {
+                    // dialog to confirm deletion
+                    int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this person?", "Warning", JOptionPane.YES_NO_OPTION);
+                    if (dialogResult == JOptionPane.YES_OPTION) {
+                        db.removePerson(person.getSsNumber());
+                        createPeopleBlocks(search);
+                    }
+                });
+                personBlock.getEditButton().addActionListener(e -> {
+                    AddPersonDialog editPersonDialog = new AddPersonDialog(person);
+                    editPersonDialog.pack();
+                    editPersonDialog.setVisible(true);
+                    createPeopleBlocks(search);
+                });
+                findPeoplePanel.add(personBlock.getMainPanel());
+            }
+        }
+        findPeoplePanel.revalidate();
+        findPeoplePanel.repaint();
     }
 
     public void createHospitalBlocks() {

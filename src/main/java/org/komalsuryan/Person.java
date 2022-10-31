@@ -76,4 +76,17 @@ public class Person {
     public void setWeight(float weight) {
         this.weight = weight;
     }
+
+    private boolean checkCommunityId(int communityId) {
+        return new Database().getCommunity(communityId) != null;
+    }
+
+    private boolean checkSsNumber(String ssNumber) {
+        // match for SSN format: 9 numbers only
+        return ssNumber.matches("\\d{9}");
+    }
+
+    private boolean checkName(String name) {
+        return name.matches("[a-zA-Z]+");
+    }
 }

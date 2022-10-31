@@ -36,6 +36,9 @@ public class Database {
         FileIO.createFile("systemAdmin");
         FileIO.writeFile("systemAdmin", "[{\"username\":\"admin\", \"password\":\"admin\"}]");
 
+        // create the people.json file if it does not exist
+        FileIO.createFile("people");
+
         // create the communityAdmins.json file if it does not exist
         FileIO.createFile("communityAdmins");
 
@@ -413,11 +416,40 @@ public class Database {
         return null;
     }
 
+    public ArrayList<Person> getPeople(String search) {
+        ArrayList<Person> people = getAllPeople();
+        ArrayList<Person> results = new ArrayList<>();
+        for (Person person : people) {
+            int age = person.getDateOfBirth().until(LocalDate.now()).getYears();
+            if (person.getName().toLowerCase().contains(search.toLowerCase()) ||
+                    person.getSsNumber().toLowerCase().contains(search.toLowerCase()) ||
+            getCommunity(person.getCommunityId()).getName().toLowerCase().contains(search.toLowerCase()) ||
+            String.valueOf(age).contains(search)) {
+                results.add(person);
+            }
+        }
+        return results;
+    }
+
     public void addPerson(Person person) {
         // get all people
         ArrayList<Person> people = getAllPeople();
         // add new person
         people.add(person);
+        // write to file
+        FileIO.writeFile("people", gson.toJson(people));
+    }
+
+    public void updatePerson(Person person) {
+        // get all people
+        ArrayList<Person> people = getAllPeople();
+        // update person
+        for (int i = 0; i < people.size(); i++) {
+            if (people.get(i).getSsNumber().equals(person.getSsNumber())) {
+                people.set(i, person);
+                break;
+            }
+        }
         // write to file
         FileIO.writeFile("people", gson.toJson(people));
     }
