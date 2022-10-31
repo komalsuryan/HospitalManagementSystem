@@ -1,12 +1,12 @@
 package org.komalsuryan.views;
 
+import org.komalsuryan.Community;
 import org.komalsuryan.Database;
 import org.komalsuryan.Doctor;
 import org.komalsuryan.views.personViewUiElements.PersonDoctorBlock;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class PersonView {
@@ -22,21 +22,63 @@ public class PersonView {
     private JPanel findDoctorsSearchPanel;
     private JLabel findDoctorsSearchLabel;
     private JTextField findDoctorsSearchText;
+    private JComboBox<String> communitySelectComboBox;
+    private JLabel communitySelectLabel;
     private final Database db;
 
-    public PersonView(int id) throws IOException {
+    public PersonView() {
         db = new Database();
-        welcomeLabel.setText("Welcome, " + id);
-        editPersonButton.setText("Edit your details");
+        welcomeLabel.setText("Welcome, Find doctors at your location");
+        communitySelectLabel.setText("Select Community");
+        // populate the community select combo box
+        communitySelectComboBox.addItem("Anywhere");
+        ArrayList<Community> communities = db.getAllCommunities();
+        for (Community community : communities) {
+            communitySelectComboBox.addItem(community.getName());
+        }
         logoutPersonButton.setText("Logout");
-        findDoctorsLabel.setText("Doctors in your community");
+        findDoctorsLabel.setText("Find Doctors");
         findDoctorsSearchLabel.setText("Search");
-        createDoctorBlocks();
+
+        final int[] communityId = {0};
+        communitySelectComboBox.addActionListener(e -> {
+            findDoctorsSearchText.setText("");
+            String communityName = (String) communitySelectComboBox.getSelectedItem();
+            if (communityName == null || communityName.equals("Anywhere")) {
+                createDoctorBlocks(0);
+                return;
+            }
+            communityId[0] = db.getAllCommunities().stream().filter(community -> community.getName().equals(communityName)).findFirst().get().getId();
+            createDoctorBlocks(communityId[0]);
+        });
+        communitySelectComboBox.setSelectedItem("Anywhere");
+
+        findDoctorsSearchText.addActionListener(e -> {
+            String searchQuery = findDoctorsSearchText.getText();
+            if (searchQuery == null || searchQuery.equals("")) {
+                createDoctorBlocks(communityId[0]);
+                return;
+            }
+            createDoctorBlocks(communityId[0], searchQuery);
+        });
     }
 
-    private void createDoctorBlocks() {
+    private void createDoctorBlocks(int communityId) {
+        findDoctorsPanel.removeAll();
+        findDoctorsPanel.revalidate();
+        findDoctorsPanel.repaint();
         ArrayList<Doctor> doctors = db.getAllDoctors();
-        findDoctorsPanel.setLayout(new BoxLayout(findDoctorsPanel, BoxLayout.X_AXIS));
+        if (communityId != 0) {
+            doctors.removeIf(doctor -> db.getHospital(doctor.getHospitalId()).getCommunityId() != communityId);
+        }
+        if (doctors.size() == 0) {
+            findDoctorsPanel.setLayout(new GridLayout(0, 1));
+            findDoctorsPanel.add(new JLabel("No doctors found"));
+            findDoctorsPanel.revalidate();
+            findDoctorsPanel.repaint();
+            return;
+        }
+        findDoctorsPanel.setLayout(new GridLayout(0, 3));
         for (Doctor doctor : doctors) {
             PersonDoctorBlock doctorBlock = new PersonDoctorBlock(doctor);
             findDoctorsPanel.add(doctorBlock.getMainPanel());
@@ -45,13 +87,31 @@ public class PersonView {
         findDoctorsPanel.repaint();
     }
 
-    public static void main(String[] args) throws IOException {
-        JFrame frame = new JFrame("PersonView");
-        frame.setContentPane(new PersonView(1).personViewMainPanel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setMinimumSize(new Dimension(800, 600));
-        frame.setSize(600, 600);
-        frame.pack();
-        frame.setVisible(true);
+    private void createDoctorBlocks(int communityId, String search) {
+        findDoctorsPanel.removeAll();
+        findDoctorsPanel.revalidate();
+        findDoctorsPanel.repaint();
+        ArrayList<Doctor> doctors = db.getDoctors(search);
+        if (communityId != 0) {
+            doctors.removeIf(doctor -> db.getHospital(doctor.getHospitalId()).getCommunityId() != communityId);
+        }
+        if (doctors.size() == 0) {
+            findDoctorsPanel.setLayout(new GridLayout(0, 1));
+            findDoctorsPanel.add(new JLabel("No doctors found"));
+            findDoctorsPanel.revalidate();
+            findDoctorsPanel.repaint();
+            return;
+        }
+        findDoctorsPanel.setLayout(new GridLayout(0, 3));
+        for (Doctor doctor : doctors) {
+            PersonDoctorBlock doctorBlock = new PersonDoctorBlock(doctor);
+            findDoctorsPanel.add(doctorBlock.getMainPanel());
+        }
+        findDoctorsPanel.revalidate();
+        findDoctorsPanel.repaint();
+    }
+
+    public JPanel getMainPanel() {
+        return personViewMainPanel;
     }
 }

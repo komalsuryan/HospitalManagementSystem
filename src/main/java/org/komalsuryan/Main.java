@@ -1,20 +1,17 @@
 package org.komalsuryan;
 
-import org.komalsuryan.views.SysAdminView;
+import org.komalsuryan.views.LoginView;
 
 import javax.swing.*;
-import java.awt.*;
-import java.io.IOException;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         // write your code here
         JFrame jFrame = new JFrame("Hospital Management System");
         try {
-            jFrame.setContentPane(new SysAdminView().getMainPanel());
+            jFrame.setContentPane(new LoginView(jFrame).getMainPanel());
             jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            jFrame.setMinimumSize(new Dimension(800, 600));
-            jFrame.setSize(800, 600);
+            jFrame.setLocationRelativeTo(null);
             jFrame.pack();
             jFrame.setVisible(true);
         } catch (Exception e) {

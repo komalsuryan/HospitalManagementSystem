@@ -3,6 +3,7 @@ package org.komalsuryan.views.sysAdminViewUiElements;
 import com.toedter.calendar.JDateChooser;
 import org.komalsuryan.*;
 
+import javax.print.Doc;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -278,6 +279,21 @@ public class AddAppointmentDialog extends JDialog {
 
         // call onCancel() on ESCAPE
         contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+    }
+
+    public AddAppointmentDialog(Patient patient, Doctor doctor, boolean isUser) {
+        this(isUser);
+        addAppointmentHeadingLabel.setText("Add Appointment");
+        personCommunityComboBox.setSelectedItem(new Database().getCommunity(patient.getCommunityId()).getName());
+        personCommunityComboBox.setEnabled(false);
+        personSsnComboBox.setSelectedItem(patient.getSsNumber());
+        personSsnComboBox.setEnabled(false);
+        doctorCommunityComboBox.setSelectedItem(new Database().getCommunity(doctor.getHospitalId()).getName());
+        doctorCommunityComboBox.setEnabled(false);
+        doctorHospitalComboBox.setSelectedItem(new Database().getHospital(doctor.getHospitalId()).getName());
+        doctorHospitalComboBox.setEnabled(false);
+        doctorNameComboBox.setSelectedItem(doctor.getName());
+        doctorNameComboBox.setEnabled(false);
     }
 
     private void onOK() {
