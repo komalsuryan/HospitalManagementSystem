@@ -33,6 +33,10 @@ public class AddDoctorDialog extends JDialog {
     private JComboBox<String> doctorDayOffValueComboBox;
     private JSpinner doctorMaxPatientsValueSpinner;
     private JLabel doctorMaxPatientsLabel;
+    private JTextField doctorEmailValueField;
+    private JPasswordField doctorPasswordValueField;
+    private JLabel doctorEmailKeyLabel;
+    private JLabel doctorPasswordKeyLabel;
 
     public AddDoctorDialog() {
         setContentPane(contentPane);
@@ -50,6 +54,8 @@ public class AddDoctorDialog extends JDialog {
         doctorEndTimeKeyLabel.setText("Shift End Time");
         doctorMaxPatientsLabel.setText("Max Patients per Hour");
         doctorDayOffKeyLabel.setText("Select the Day Off");
+        doctorEmailKeyLabel.setText("Email");
+        doctorPasswordKeyLabel.setText("Password");
 
         // value fields
         doctorSpecializationValueComboBox.setModel(new DefaultComboBoxModel<>(Arrays.stream(DoctorSpeciality.values()).map(DoctorSpeciality::getSpeciality).toArray(String[]::new)));
@@ -96,9 +102,11 @@ public class AddDoctorDialog extends JDialog {
             LocalTime doctorEndTime = LocalTime.parse((String) Objects.requireNonNull(doctorEndTimeValueComboBox.getSelectedItem()));
             int doctorMaxPatients = (int) doctorMaxPatientsValueSpinner.getValue();
             DayOfWeek doctorDayOff = DayOfWeek.valueOf(((String) Objects.requireNonNull(doctorDayOffValueComboBox.getSelectedItem())).toUpperCase());
+            String doctorEmail = doctorEmailValueField.getText();
+            String doctorPassword = new String(doctorPasswordValueField.getPassword());
 
             // add doctor to database
-            new Database().addDoctor(new Doctor(doctorName, doctorSpecialization, doctorHospitalId, doctorStartTime, doctorEndTime, doctorMaxPatients, doctorDayOff));
+            new Database().addDoctor(new Doctor(doctorName, doctorSpecialization, doctorHospitalId, doctorStartTime, doctorEndTime, doctorMaxPatients, doctorDayOff, doctorEmail, doctorPassword));
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             return;

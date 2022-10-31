@@ -14,8 +14,10 @@ public class Doctor {
     private LocalTime endTime;
     private int maxPatientsPerHour;
     private DayOfWeek weeklyOffDay;
+    private String email;
+    private String password;
 
-    public Doctor(String name, String specialization, int hospitalId, LocalTime startTime, LocalTime endTime, int maxPatientsPerHour, DayOfWeek weeklyOffDay) {
+    public Doctor(String name, String specialization, int hospitalId, LocalTime startTime, LocalTime endTime, int maxPatientsPerHour, DayOfWeek weeklyOffDay, String email, String password) {
         this.id = count.incrementAndGet();
         this.name = name;
         this.specialization = specialization;
@@ -24,6 +26,8 @@ public class Doctor {
         this.endTime = endTime;
         this.maxPatientsPerHour = maxPatientsPerHour;
         this.weeklyOffDay = weeklyOffDay;
+        this.email = email;
+        this.password = password;
     }
 
     public int getId() {
@@ -86,4 +90,19 @@ public class Doctor {
         this.weeklyOffDay = weeklyOffDay;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

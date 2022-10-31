@@ -31,6 +31,10 @@ public class EditDoctorDialog extends JDialog {
     private JComboBox<String> doctorDayOffValueComboBox;
     private JSpinner doctorMaxPatientsValueSpinner;
     private JLabel editDoctorHeadingLabel;
+    private JTextField doctorEmailValueField;
+    private JPasswordField doctorPasswordValueField;
+    private JLabel doctorEmailKeyLabel;
+    private JLabel doctorPasswordKeyLabel;
 
     public EditDoctorDialog(Doctor doctor) {
         setContentPane(contentPane);
@@ -48,6 +52,8 @@ public class EditDoctorDialog extends JDialog {
         doctorEndTimeKeyLabel.setText("Shift End Time");
         doctorMaxPatientsLabel.setText("Max Patients per Hour");
         doctorDayOffKeyLabel.setText("Select the Day Off");
+        doctorEmailKeyLabel.setText("Email");
+        doctorPasswordKeyLabel.setText("Password");
 
         // value fields
         doctorNameValueField.setText(doctor.getName());
@@ -68,6 +74,8 @@ public class EditDoctorDialog extends JDialog {
         doctorEndTimeValueComboBox.setSelectedItem(doctor.getEndTime().toString());
         doctorDayOffValueComboBox.setModel(new DefaultComboBoxModel<>(new String[]{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}));
         doctorDayOffValueComboBox.setSelectedItem(doctor.getWeeklyOffDay().toString());
+        doctorEmailValueField.setText(doctor.getEmail());
+        doctorPasswordValueField.setText(doctor.getPassword());
 
         buttonOK.addActionListener(e -> onOK(doctor));
 
@@ -97,6 +105,8 @@ public class EditDoctorDialog extends JDialog {
             LocalTime doctorEndTime = LocalTime.parse((String) Objects.requireNonNull(doctorEndTimeValueComboBox.getSelectedItem()));
             int doctorMaxPatients = (int) doctorMaxPatientsValueSpinner.getValue();
             DayOfWeek doctorDayOff = DayOfWeek.valueOf(((String) Objects.requireNonNull(doctorDayOffValueComboBox.getSelectedItem())).toUpperCase());
+            String doctorEmail = doctorEmailValueField.getText();
+            String doctorPassword = new String(doctorPasswordValueField.getPassword());
 
             // update the doctor
             doctor.setName(doctorName);
@@ -106,6 +116,8 @@ public class EditDoctorDialog extends JDialog {
             doctor.setEndTime(doctorEndTime);
             doctor.setMaxPatientsPerHour(doctorMaxPatients);
             doctor.setWeeklyOffDay(doctorDayOff);
+            doctor.setEmail(doctorEmail);
+            doctor.setPassword(doctorPassword);
 
             // update the doctor in the database
             new Database().updateDoctor(doctor);
