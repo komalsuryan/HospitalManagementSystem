@@ -389,11 +389,49 @@ public class Database {
         return null;
     }
 
+    public Patient getPatient(String ssn) {
+        ArrayList<Patient> patients = getAllPatients();
+        for (Patient patient : patients) {
+            if (patient.getSsNumber().equals(ssn)) {
+                return patient;
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<Patient> getPatients(String search) {
+        ArrayList<Patient> patients = getAllPatients();
+        ArrayList<Patient> results = new ArrayList<>();
+        for (Patient patient : patients) {
+            // search for patient by name, SSN, email
+            if (patient.getName().toLowerCase().contains(search.toLowerCase()) ||
+                    patient.getSsNumber().toLowerCase().contains(search.toLowerCase()) ||
+                    patient.getEmail().toLowerCase().contains(search.toLowerCase())) {
+                results.add(patient);
+            }
+        }
+        return results;
+    }
+
     public void addPatient(Patient patient) {
         // get all patients
         ArrayList<Patient> patients = getAllPatients();
         // add new patient
         patients.add(patient);
+        // write to file
+        FileIO.writeFile("patients", gson.toJson(patients));
+    }
+
+    public void updatePatient(Patient patient) {
+        // get all patients
+        ArrayList<Patient> patients = getAllPatients();
+        // update patient
+        for (int i = 0; i < patients.size(); i++) {
+            if (patients.get(i).getId() == patient.getId()) {
+                patients.set(i, patient);
+                break;
+            }
+        }
         // write to file
         FileIO.writeFile("patients", gson.toJson(patients));
     }
@@ -496,6 +534,41 @@ public class Database {
             }
         }
         return null;
+    }
+
+    public ArrayList<Appointment> getAppointments(String search) {
+        ArrayList<Appointment> appointments = getAllAppointments();
+        ArrayList<Appointment> results = new ArrayList<>();
+        for (Appointment appointment : appointments) {
+            // get the patient name
+            String patientName = getPatient(appointment.getPatientId()).getName();
+            // get the doctor name
+            String doctorName = getDoctor(appointment.getDoctorId()).getName();
+            // get the hospital name
+            String hospitalName = getHospital(appointment.getHospitalId()).getName();
+
+            if (patientName.toLowerCase().contains(search.toLowerCase()) ||
+                    doctorName.toLowerCase().contains(search.toLowerCase()) ||
+                    hospitalName.toLowerCase().contains(search.toLowerCase()) ||
+                    appointment.getDate().toString().contains(search)) {
+                results.add(appointment);
+            }
+        }
+        return results;
+    }
+
+    public void updateAppointment(Appointment appointment) {
+        // get all appointments
+        ArrayList<Appointment> appointments = getAllAppointments();
+        // update appointment
+        for (int i = 0; i < appointments.size(); i++) {
+            if (appointments.get(i).getId() == appointment.getId()) {
+                appointments.set(i, appointment);
+                break;
+            }
+        }
+        // write to file
+        FileIO.writeFile("appointments", gson.toJson(appointments));
     }
 
     public void addAppointment(Appointment appointment) {
