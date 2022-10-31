@@ -32,6 +32,13 @@ public class Database {
                 .setPrettyPrinting()
                 .create();
 
+        // create the systemAdmin.json file if it does not exist
+        FileIO.createFile("systemAdmin");
+        FileIO.writeFile("systemAdmin", "[{\"username\":\"admin\", \"password\":\"admin\"}]");
+
+        // create the communityAdmins.json file if it does not exist
+        FileIO.createFile("communityAdmins");
+
         // create the communities.json file if it does not exist
         FileIO.createFile("communities");
 
@@ -47,6 +54,101 @@ public class Database {
         // create the appointments.json file if it does not exist
         FileIO.createFile("appointments");
     }
+
+    //region CommunityAdmin Methods
+    public ArrayList<CommunityAdmin> getAllCommunityAdmins() {
+        // get contents of communityAdmins file as a string
+        String contents = FileIO.readFile("communityAdmins");
+        if (contents.isEmpty() || contents.equals("null")) {
+            return new ArrayList<>();
+        }
+        Type communityAdminListType = new TypeToken<ArrayList<CommunityAdmin>>(){}.getType();
+        return gson.fromJson(contents, communityAdminListType);
+    }
+
+    public CommunityAdmin getCommunityAdmin(int id) {
+        ArrayList<CommunityAdmin> communityAdmins = getAllCommunityAdmins();
+        for (CommunityAdmin communityAdmin : communityAdmins) {
+            if (communityAdmin.getId() == id) {
+                return communityAdmin;
+            }
+        }
+        return null;
+    }
+
+    public void addCommunityAdmin(CommunityAdmin communityAdmin) {
+        // get all communityAdmins
+        ArrayList<CommunityAdmin> communityAdmins = getAllCommunityAdmins();
+
+        // add the new communityAdmin
+        communityAdmins.add(communityAdmin);
+
+        // write the new communityAdmins to the file
+        FileIO.writeFile("communityAdmins", gson.toJson(communityAdmins));
+    }
+
+    public void updateCommunityAdmin(CommunityAdmin communityAdmin) {
+        // get all communityAdmins
+        ArrayList<CommunityAdmin> communityAdmins = getAllCommunityAdmins();
+
+        // find the communityAdmin to update
+        for (int i = 0; i < communityAdmins.size(); i++) {
+            if (communityAdmins.get(i).getId() == communityAdmin.getId()) {
+                communityAdmins.set(i, communityAdmin);
+                break;
+            }
+        }
+
+        // write the new communityAdmins to the file
+        FileIO.writeFile("communityAdmins", gson.toJson(communityAdmins));
+    }
+
+    public void deleteCommunityAdmin(int id) {
+        // get all communityAdmins
+        ArrayList<CommunityAdmin> communityAdmins = getAllCommunityAdmins();
+
+        // find the communityAdmin to delete
+        for (int i = 0; i < communityAdmins.size(); i++) {
+            if (communityAdmins.get(i).getId() == id) {
+                communityAdmins.remove(i);
+                break;
+            }
+        }
+
+        // write the new communityAdmins to the file
+        FileIO.writeFile("communityAdmins", gson.toJson(communityAdmins));
+    }
+
+    public ArrayList<CommunityAdmin> getCommunityAdminsByCommunityId(int communityId) {
+        // get all communityAdmins
+        ArrayList<CommunityAdmin> communityAdmins = getAllCommunityAdmins();
+
+        // find the communityAdmins with the given communityId
+        ArrayList<CommunityAdmin> communityAdminsByCommunityId = new ArrayList<>();
+        for (CommunityAdmin communityAdmin : communityAdmins) {
+            if (communityAdmin.getCommunityId() == communityId) {
+                communityAdminsByCommunityId.add(communityAdmin);
+            }
+        }
+
+        return communityAdminsByCommunityId;
+    }
+
+    public int getMaxCommunityAdminId() {
+        // get all communityAdmins
+        ArrayList<CommunityAdmin> communityAdmins = getAllCommunityAdmins();
+
+        // find the max id
+        int maxId = 0;
+        for (CommunityAdmin communityAdmin : communityAdmins) {
+            if (communityAdmin.getId() > maxId) {
+                maxId = communityAdmin.getId();
+            }
+        }
+
+        return maxId;
+    }
+    //endregion
 
     //region Doctor Methods
     public ArrayList<Doctor> getAllDoctors() {
