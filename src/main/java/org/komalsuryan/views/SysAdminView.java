@@ -51,6 +51,12 @@ public class SysAdminView {
     private JLabel findPeopleSearchLabel;
     private JTextField findPeopleSearchField;
     private JButton addPeopleButton;
+    private JPanel communityAdminPanel;
+    private JPanel findCommunityAdminsPanel;
+    private JLabel findCommunityAdminLabel;
+    private JLabel findCommunityAdminSearchLabel;
+    private JTextField findCommunityAdminSearchText;
+    private JButton addCommunityAdminButton;
     private final Database db;
 
     public SysAdminView() {
@@ -106,6 +112,29 @@ public class SysAdminView {
             }
         });
 
+        // community admin panel
+        findCommunityAdminLabel.setText("Community Admins");
+        findCommunityAdminSearchLabel.setText("Search");
+        addCommunityAdminButton.setText("Add Community Admin");
+        addCommunityAdminButton.addActionListener(e -> {
+            AddCommunityAdminDialog addCommunityAdminDialog = new AddCommunityAdminDialog();
+            addCommunityAdminDialog.pack();
+            addCommunityAdminDialog.setVisible(true);
+            createCommunityAdminBlocks();
+        });
+        findCommunityAdminSearchText.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent e) {
+                super.keyReleased(e);
+                String search = findCommunityAdminSearchText.getText();
+                if (search.equals("")) {
+                    createCommunityAdminBlocks();
+                } else {
+                    createCommunityAdminBlocks(search);
+                }
+            }
+        });
+
         // hospitals panel
         findHospitalsLabel.setText("Hospitals");
         findHosptalsSearchLabel.setText("Search");
@@ -154,6 +183,7 @@ public class SysAdminView {
 
         createCommunityBlocks();
         createPeopleBlocks();
+        createCommunityAdminBlocks();
         createHospitalBlocks();
         createDoctorBlocks();
     }
@@ -280,6 +310,68 @@ public class SysAdminView {
         }
         findPeoplePanel.revalidate();
         findPeoplePanel.repaint();
+    }
+
+    public void createCommunityAdminBlocks() {
+        findCommunityAdminsPanel.removeAll();
+        ArrayList<CommunityAdmin> communityAdmins = db.getAllCommunityAdmins();
+        if (communityAdmins.size() == 0) {
+            findCommunityAdminsPanel.setLayout(new GridLayout());
+            findCommunityAdminsPanel.add(new JLabel("No community admins found. Add a community admin to begin"));
+        } else {
+            findCommunityAdminsPanel.setLayout(new BoxLayout(findCommunityAdminsPanel, BoxLayout.X_AXIS));
+            for (CommunityAdmin communityAdmin : communityAdmins) {
+                SysAdminCommunityAdminBlock communityAdminBlock = new SysAdminCommunityAdminBlock(communityAdmin);
+                communityAdminBlock.getDeleteButton().addActionListener(e -> {
+                    // dialog to confirm deletion
+                    int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this community admin?", "Warning", JOptionPane.YES_NO_OPTION);
+                    if (dialogResult == JOptionPane.YES_OPTION) {
+                        db.deleteCommunityAdmin(communityAdmin.getId());
+                        createCommunityAdminBlocks();
+                    }
+                });
+                communityAdminBlock.getEditButton().addActionListener(e -> {
+                    AddCommunityAdminDialog editCommunityAdminDialog = new AddCommunityAdminDialog(communityAdmin);
+                    editCommunityAdminDialog.pack();
+                    editCommunityAdminDialog.setVisible(true);
+                    createCommunityAdminBlocks();
+                });
+                findCommunityAdminsPanel.add(communityAdminBlock.getMainPanel());
+            }
+        }
+        findCommunityAdminsPanel.revalidate();
+        findCommunityAdminsPanel.repaint();
+    }
+
+    public void createCommunityAdminBlocks(String search) {
+        ArrayList<CommunityAdmin> communityAdmins = new Database().getCommunityAdmins(search);
+        findCommunityAdminsPanel.removeAll();
+        if (communityAdmins.size() == 0) {
+            findCommunityAdminsPanel.setLayout(new GridLayout());
+            findCommunityAdminsPanel.add(new JLabel("No community admins found for the search term"));
+        } else {
+            findCommunityAdminsPanel.setLayout(new BoxLayout(findCommunityAdminsPanel, BoxLayout.X_AXIS));
+            for (CommunityAdmin communityAdmin : communityAdmins) {
+                SysAdminCommunityAdminBlock communityAdminBlock = new SysAdminCommunityAdminBlock(communityAdmin);
+                communityAdminBlock.getDeleteButton().addActionListener(e -> {
+                    // dialog to confirm deletion
+                    int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this community admin?", "Warning", JOptionPane.YES_NO_OPTION);
+                    if (dialogResult == JOptionPane.YES_OPTION) {
+                        db.deleteCommunityAdmin(communityAdmin.getId());
+                        createCommunityAdminBlocks(search);
+                    }
+                });
+                communityAdminBlock.getEditButton().addActionListener(e -> {
+                    AddCommunityAdminDialog editCommunityAdminDialog = new AddCommunityAdminDialog(communityAdmin);
+                    editCommunityAdminDialog.pack();
+                    editCommunityAdminDialog.setVisible(true);
+                    createCommunityAdminBlocks(search);
+                });
+                findCommunityAdminsPanel.add(communityAdminBlock.getMainPanel());
+            }
+        }
+        findCommunityAdminsPanel.revalidate();
+        findCommunityAdminsPanel.repaint();
     }
 
     public void createHospitalBlocks() {

@@ -79,6 +79,19 @@ public class Database {
         return null;
     }
 
+    public ArrayList<CommunityAdmin> getCommunityAdmins(String search) {
+        ArrayList<CommunityAdmin> communityAdmins = getAllCommunityAdmins();
+        ArrayList<CommunityAdmin> filteredCommunityAdmins = new ArrayList<>();
+        for (CommunityAdmin communityAdmin : communityAdmins) {
+            // search in name and community name
+            if (communityAdmin.getName().toLowerCase().contains(search.toLowerCase()) ||
+                    getCommunity(communityAdmin.getCommunityId()).getName().toLowerCase().contains(search.toLowerCase())) {
+                filteredCommunityAdmins.add(communityAdmin);
+            }
+        }
+        return filteredCommunityAdmins;
+    }
+
     public void addCommunityAdmin(CommunityAdmin communityAdmin) {
         // get all communityAdmins
         ArrayList<CommunityAdmin> communityAdmins = getAllCommunityAdmins();
