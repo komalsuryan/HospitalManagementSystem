@@ -150,6 +150,7 @@ public class Appointment {
         appointments.removeIf(appointment -> appointment.getPatientId() != patientId);
         appointments.removeIf(appointment -> appointment.getDate() != date);
         appointments.removeIf(appointment -> appointment.getTime() != time);
-        return appointments.size() > 0;
+        System.out.println(appointments.size());
+        return appointments.size() == 0;
     }
 }
