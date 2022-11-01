@@ -8,7 +8,7 @@ Course Name: __INFO5100 12375 Application Engineer & Dev SEC 02__
 This application is a platform for people to find medical resource in different city and community.
 
 ## UML Diagram
-![UML Diagram](https://github.com/komalsuryan/HospitalManagementSystem/blob/fc20bd8a6b5f04b25426b494feb5ec3285bebae4/UMLDiagram.png)
+![UML Diagram](UMLDiagram.png)
 
 ## Objects
 ### Doctors
