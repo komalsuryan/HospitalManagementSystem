@@ -69,7 +69,12 @@ public class LoginView {
             communityAdminFrame.setVisible(true);
             currentJframe.dispose();
         } else if (type == UserTypes.DOCTOR) {
-//            currentJframe.setContentPane(new DoctorView(userId).getMainPanel());
+            JFrame doctorFrame = new JFrame("Doctor");
+            doctorFrame.setContentPane(new DoctorView(db.getDoctor(userId)).getMainPanel());
+            doctorFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            doctorFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            doctorFrame.pack();
+            doctorFrame.setVisible(true);
         } else if (type == UserTypes.PATIENT) {
 //            currentJframe.setContentPane(new PatientView(userId).getMainPanel());
         }

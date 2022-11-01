@@ -627,6 +627,28 @@ public class Database {
         return null;
     }
 
+    public ArrayList<Appointment> getAppointments(Doctor doctor, Patient patient) {
+        ArrayList<Appointment> appointments = getAllAppointments();
+        ArrayList<Appointment> results = new ArrayList<>();
+        for (Appointment appointment : appointments) {
+            // check if either one of parameters is null
+            if (doctor == null) {
+                if (appointment.getPatientId() == patient.getId()) {
+                    results.add(appointment);
+                }
+            } else if (patient == null) {
+                if (appointment.getDoctorId() == doctor.getId()) {
+                    results.add(appointment);
+                }
+            } else {
+                if (appointment.getDoctorId() == doctor.getId() && appointment.getPatientId() == patient.getId()) {
+                    results.add(appointment);
+                }
+            }
+        }
+        return results;
+    }
+
     public ArrayList<Appointment> getAppointments(String search) {
         ArrayList<Appointment> appointments = getAllAppointments();
         ArrayList<Appointment> results = new ArrayList<>();
