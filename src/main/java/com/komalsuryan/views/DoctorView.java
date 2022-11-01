@@ -28,7 +28,7 @@ public class DoctorView {
     private JPanel patientsPanel;
     private JLabel viewPatientsLabel;
     private JPanel viewPatientsPanel;
-    private Database db;
+    private final Database db;
 
     public DoctorView(Doctor doctor) {
         db = new Database();

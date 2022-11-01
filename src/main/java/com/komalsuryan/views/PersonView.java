@@ -4,7 +4,6 @@ import com.komalsuryan.Community;
 import com.komalsuryan.Database;
 import com.komalsuryan.Doctor;
 import com.komalsuryan.views.personViewUiElements.PersonDoctorBlock;
-import org.komalsuryan.*;
 
 import javax.swing.*;
 import java.awt.*;

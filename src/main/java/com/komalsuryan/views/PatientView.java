@@ -2,7 +2,7 @@ package com.komalsuryan.views;
 
 import com.komalsuryan.*;
 import com.komalsuryan.views.sysAdminViewUiElements.AddAppointmentDialog;
-import org.komalsuryan.*;
+import com.komalsuryan.*;
 import com.komalsuryan.views.personViewUiElements.PersonDoctorBlock;
 import com.komalsuryan.views.sysAdminViewUiElements.SysAdminAppointmentBlock;
 
@@ -57,7 +57,7 @@ public class PatientView {
             jFrame.pack();
             jFrame.setVisible(true);
             // close the current window
-            ((JFrame) SwingUtilities.getWindowAncestor(mainPanel)).dispose();
+            SwingUtilities.getWindowAncestor(mainPanel).dispose();
         });
 
         findDoctorsLabel.setText("Find Doctors");

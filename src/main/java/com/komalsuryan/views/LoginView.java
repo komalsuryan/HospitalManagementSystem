@@ -17,7 +17,7 @@ public class LoginView {
     private JButton loginButton;
     private JButton browseAnonButton;
 
-    private Database db;
+    private final Database db;
 
     public LoginView(JFrame currentJframe) {
         db = new Database();

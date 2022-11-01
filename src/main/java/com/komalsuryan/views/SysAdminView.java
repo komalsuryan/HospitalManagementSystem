@@ -2,8 +2,8 @@ package com.komalsuryan.views;
 
 import com.komalsuryan.*;
 import com.komalsuryan.views.sysAdminViewUiElements.*;
-import org.komalsuryan.*;
-import org.komalsuryan.views.sysAdminViewUiElements.*;
+import com.komalsuryan.*;
+import com.komalsuryan.views.sysAdminViewUiElements.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -85,7 +85,7 @@ public class SysAdminView {
             jFrame.pack();
             jFrame.setVisible(true);
             // close the current window
-            ((JFrame) SwingUtilities.getWindowAncestor(sysAdminViewMainPanel)).dispose();
+            SwingUtilities.getWindowAncestor(sysAdminViewMainPanel).dispose();
         });
 
         // communities panel
