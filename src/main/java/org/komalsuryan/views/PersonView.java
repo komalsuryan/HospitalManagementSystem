@@ -1,12 +1,13 @@
 package org.komalsuryan.views;
 
-import org.komalsuryan.Community;
-import org.komalsuryan.Database;
-import org.komalsuryan.Doctor;
+import org.komalsuryan.*;
 import org.komalsuryan.views.personViewUiElements.PersonDoctorBlock;
+import org.komalsuryan.views.sysAdminViewUiElements.AddAppointmentDialog;
+import org.komalsuryan.views.sysAdminViewUiElements.SysAdminAppointmentBlock;
 
 import javax.swing.*;
 import java.awt.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class PersonView {
@@ -37,6 +38,17 @@ public class PersonView {
             communitySelectComboBox.addItem(community.getName());
         }
         logoutPersonButton.setText("Logout");
+        logoutPersonButton.addActionListener(e -> {
+            JFrame jFrame = new JFrame("Hospital Management System");
+            jFrame.setContentPane(new LoginView(jFrame).getMainPanel());
+            jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            jFrame.setLocationRelativeTo(null);
+            jFrame.pack();
+            jFrame.setVisible(true);
+            // close the current window
+            SwingUtilities.getWindowAncestor(personViewMainPanel).dispose();
+        });
+
         findDoctorsLabel.setText("Find Doctors");
         findDoctorsSearchLabel.setText("Search");
 
