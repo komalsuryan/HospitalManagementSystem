@@ -12,9 +12,21 @@ public class Person {
     private float weight;
 
     public Person(String ssNumber, String name, int communityId, LocalDate dateOfBirth, String sex, float height, float weight) {
-        this.ssNumber = ssNumber;
-        this.name = name;
-        this.communityId = communityId;
+        if (checkSsNumber(ssNumber)) {
+            this.ssNumber = ssNumber;
+        } else {
+            throw new IllegalArgumentException("Invalid identity number. ID must be 9 digits only.");
+        }
+        if (checkName(name)) {
+            this.name = name;
+        } else {
+            throw new IllegalArgumentException("Invalid name. Name can only contain alphabets, spaces, hyphen, comma and dots.");
+        }
+        if (checkCommunityId(communityId)) {
+            this.communityId = communityId;
+        } else {
+            throw new IllegalArgumentException("Invalid community ID. No community with ID " + communityId + " found.");
+        }
         this.dateOfBirth = dateOfBirth;
         this.sex = sex;
         this.height = height;
@@ -36,7 +48,11 @@ public class Person {
     }
 
     public void setSsNumber(String ssNumber) {
-        this.ssNumber = ssNumber;
+        if (checkSsNumber(ssNumber)) {
+            this.ssNumber = ssNumber;
+        } else {
+            throw new IllegalArgumentException("Invalid identity number. ID must be 9 digits only.");
+        }
     }
 
     public String getName() {
@@ -44,7 +60,11 @@ public class Person {
     }
 
     public void setName(String name) {
-        this.name = name;
+        if (checkName(name)) {
+            this.name = name;
+        } else {
+            throw new IllegalArgumentException("Invalid name. Name can only contain alphabets, spaces, hyphen, comma and dots.");
+        }
     }
 
     public int getCommunityId() {
@@ -52,7 +72,11 @@ public class Person {
     }
 
     public void setCommunityId(int communityId) {
-        this.communityId = communityId;
+        if (checkCommunityId(communityId)) {
+            this.communityId = communityId;
+        } else {
+            throw new IllegalArgumentException("Invalid community ID. No community with ID " + communityId + " found.");
+        }
     }
 
     public LocalDate getDateOfBirth() {
@@ -97,6 +121,6 @@ public class Person {
     }
 
     private boolean checkName(String name) {
-        return name.matches("[a-zA-Z]+");
+        return name.matches("^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$");
     }
 }

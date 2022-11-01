@@ -3,7 +3,7 @@ package com.komalsuryan;
 import java.time.LocalDate;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class CommunityAdmin extends Person {
+public class CommunityAdmin extends Person implements User {
     private final int id;
     private String email;
     private String password;
@@ -29,8 +29,16 @@ public class CommunityAdmin extends Person {
         super.setHeight(person.getHeight());
         super.setWeight(person.getWeight());
         this.id = count.incrementAndGet();
-        this.email = email;
-        this.password = password;
+        if (checkEmail(email, UserTypes.COMMUNITY_ADMIN)) {
+            this.email = email;
+        } else {
+            throw new IllegalArgumentException("Invalid email or email already exists.");
+        }
+        if (checkPassword(password)) {
+            this.password = password;
+        } else {
+            throw new IllegalArgumentException("Invalid password. Password must be at between 8 and 20 characters long.");
+        }
     }
 
     public int getId() {

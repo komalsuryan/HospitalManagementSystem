@@ -2,10 +2,13 @@ package com.komalsuryan.views.sysAdminViewUiElements;
 
 import com.komalsuryan.Community;
 import com.komalsuryan.Database;
+import com.komalsuryan.Doctor;
 import com.komalsuryan.Hospital;
 
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class EditHospitalDialog extends JDialog {
     private JPanel contentPane;
@@ -19,8 +22,12 @@ public class EditHospitalDialog extends JDialog {
     private JTextField editHospitalLocationValueField;
     private JComboBox<String> editHospitalCommunityValueComboBox;
     private JCheckBox editHospitalIsClinicCheckbox;
+    private JPanel doctorsPanel;
+    private JScrollPane doctorsScrollPane;
+    private final Hospital hospital;
 
     public EditHospitalDialog(Hospital hospital) {
+        this.hospital = hospital;
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
@@ -46,11 +53,15 @@ public class EditHospitalDialog extends JDialog {
         // set the checkbox to the value of the hospital
         editHospitalIsClinicCheckbox.setSelected(hospital.isClinic());
 
+        // doctors panel
+        doctorsPanel.setVisible(false);
+        doctorsScrollPane.setVisible(false);
+
         // buttons
         buttonOK.setText("Edit");
         buttonCancel.setText("Cancel");
 
-        buttonOK.addActionListener(e -> onOK(hospital));
+        buttonOK.addActionListener(e -> onOK());
 
         buttonCancel.addActionListener(e -> onCancel());
 
@@ -66,7 +77,7 @@ public class EditHospitalDialog extends JDialog {
         contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
 
-    private void onOK(Hospital hospital) {
+    private void onOK() {
         // get the values from the fields
         String name = editHospitalNameValueField.getText();
         String location = editHospitalLocationValueField.getText();
@@ -88,6 +99,49 @@ public class EditHospitalDialog extends JDialog {
     private void onCancel() {
         // add your code here if necessary
         dispose();
+    }
+
+    public JButton getButtonOK() {
+        return buttonOK;
+    }
+
+    public void setReadOnly() {
+        editHospitalHeadingLabel.setText("View Hospital");
+        editHospitalNameValueField.setEditable(false);
+        editHospitalLocationValueField.setEditable(false);
+        editHospitalCommunityValueComboBox.setEnabled(false);
+        editHospitalIsClinicCheckbox.setEnabled(false);
+        buttonOK.setVisible(false);
+
+        // show the doctors
+        doctorsPanel.setLayout(new BoxLayout(doctorsPanel, BoxLayout.Y_AXIS));
+        doctorsPanel.setVisible(true);
+        doctorsScrollPane.setVisible(true);
+        // create a hashmap of specializations and doctors
+        HashMap<String, ArrayList<Doctor>> doctorsBySpecialization = new HashMap<>();
+        ArrayList<Doctor> doctorsInHospital = new Database().getAllDoctors();
+        doctorsInHospital.removeIf(d -> d.getHospitalId() != hospital.getId());
+        for (Doctor doctor : doctorsInHospital) {
+            if (doctorsBySpecialization.containsKey(doctor.getSpecialization())) {
+                doctorsBySpecialization.get(doctor.getSpecialization()).add(doctor);
+            } else {
+                ArrayList<Doctor> doctors = new ArrayList<>();
+                doctors.add(doctor);
+                doctorsBySpecialization.put(doctor.getSpecialization(), doctors);
+            }
+        }
+        // create a label for each specialization
+        for (String specialization : doctorsBySpecialization.keySet()) {
+            JLabel specializationLabel = new JLabel(specialization);
+            // set the font to bold 14 pt
+            specializationLabel.setFont(specializationLabel.getFont().deriveFont(14f).deriveFont(java.awt.Font.BOLD));
+            doctorsPanel.add(specializationLabel);
+            // create a label for each doctor
+            for (Doctor doctor : doctorsBySpecialization.get(specialization)) {
+                JLabel doctorLabel = new JLabel(doctor.getName());
+                doctorsPanel.add(doctorLabel);
+            }
+        }
     }
 
     public void setEditHospitalCommunityValueComboBox(ComboBoxModel<String> model) {

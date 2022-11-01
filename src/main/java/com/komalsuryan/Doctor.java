@@ -4,7 +4,7 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Doctor {
+public class Doctor implements User {
     private static final AtomicInteger count = new AtomicInteger(new Database().getMaxDoctorId());
     private final int id;
     private String name;
@@ -19,15 +19,31 @@ public class Doctor {
 
     public Doctor(String name, String specialization, int hospitalId, LocalTime startTime, LocalTime endTime, int maxPatientsPerHour, DayOfWeek weeklyOffDay, String email, String password) {
         this.id = count.incrementAndGet();
-        this.name = name;
+        if (checkName(name)) {
+            this.name = name;
+        } else {
+            throw new IllegalArgumentException("Invalid name. Name can only contain alphabets, spaces, hyphen, comma and dots.");
+        }
         this.specialization = specialization;
-        this.hospitalId = hospitalId;
+        if (checkHospitalId(hospitalId)) {
+            this.hospitalId = hospitalId;
+        } else {
+            throw new IllegalArgumentException("Invalid hospital ID. No hospital with ID " + hospitalId + " found.");
+        }
         this.startTime = startTime;
         this.endTime = endTime;
         this.maxPatientsPerHour = maxPatientsPerHour;
         this.weeklyOffDay = weeklyOffDay;
-        this.email = email;
-        this.password = password;
+        if (checkEmail(email, UserTypes.DOCTOR)) {
+            this.email = email;
+        } else {
+            throw new IllegalArgumentException("Invalid email or email already exists.");
+        }
+        if (checkPassword(password)) {
+            this.password = password;
+        } else {
+            throw new IllegalArgumentException("Invalid password. Password must be at between 8 and 20 characters long.");
+        }
     }
 
     public int getId() {
@@ -39,7 +55,11 @@ public class Doctor {
     }
 
     public void setName(String name) {
-        this.name = name;
+        if (checkName(name)) {
+            this.name = name;
+        } else {
+            throw new IllegalArgumentException("Invalid name. Name can only contain alphabets, spaces, hyphen, comma and dots.");
+        }
     }
 
     public String getSpecialization() {
@@ -55,7 +75,11 @@ public class Doctor {
     }
 
     public void setHospitalId(int hospitalId) {
-        this.hospitalId = hospitalId;
+        if (checkHospitalId(hospitalId)) {
+            this.hospitalId = hospitalId;
+        } else {
+            throw new IllegalArgumentException("Invalid hospital ID. No hospital with ID " + hospitalId + " found.");
+        }
     }
 
     public LocalTime getStartTime() {
@@ -95,7 +119,11 @@ public class Doctor {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        if (checkEmail(email, UserTypes.DOCTOR)) {
+            this.email = email;
+        } else {
+            throw new IllegalArgumentException("Invalid email. Email must be in the format of x@y.z");
+        }
     }
 
     public String getPassword() {
@@ -103,6 +131,18 @@ public class Doctor {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        if (checkPassword(password)) {
+            this.password = password;
+        } else {
+            throw new IllegalArgumentException("Invalid password. Password must be at between 8 and 20 characters long.");
+        }
+    }
+
+    private boolean checkName(String name) {
+        return name.matches("^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$");
+    }
+
+    private boolean checkHospitalId(int hospitalId) {
+        return new Database().getHospital(hospitalId) != null;
     }
 }

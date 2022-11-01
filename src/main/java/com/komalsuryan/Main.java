@@ -1,14 +1,18 @@
 package com.komalsuryan;
 
+import com.formdev.flatlaf.FlatDarculaLaf;
 import com.komalsuryan.views.LoginView;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class Main {
     public static void main(String[] args) {
         // write your code here
-        JFrame jFrame = new JFrame("Hospital Management System");
         try {
+            setUpGlobalGui();
+            UIManager.put( "TextComponent.arc", 5 );
+            JFrame jFrame = new JFrame("Hospital Management System");
             jFrame.setContentPane(new LoginView(jFrame).getMainPanel());
             jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             jFrame.setLocationRelativeTo(null);
@@ -30,5 +34,18 @@ public class Main {
         // create a dialog to show the error
         JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         e.printStackTrace();
+    }
+
+    public static void setUpGlobalGui() {
+        try {
+            // set up dracula theme as look and feel
+            FlatDarculaLaf.setup();
+            // set text fields to have rounded corners
+            UIManager.put("TextComponent.arc", 5);
+            // set buttons to hava a bold font
+            UIManager.put("Button.font", UIManager.getFont("Button.font").deriveFont(Font.BOLD));
+        } catch (Exception e) {
+            handleException(e);
+        }
     }
 }

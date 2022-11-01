@@ -2,8 +2,6 @@ package com.komalsuryan.views;
 
 import com.komalsuryan.*;
 import com.komalsuryan.views.sysAdminViewUiElements.*;
-import com.komalsuryan.*;
-import com.komalsuryan.views.sysAdminViewUiElements.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -259,7 +257,7 @@ public class SysAdminView {
             findCommunitiesPanel.setLayout(new GridLayout());
             findCommunitiesPanel.add(new JLabel("No communities found. Add a community to begin"));
         } else {
-            findCommunitiesPanel.setLayout(new BoxLayout(findCommunitiesPanel, BoxLayout.X_AXIS));
+            findCommunitiesPanel.setLayout(new GridLayout(0,3));
             for (Community community : communities) {
                 SysAdminCommunityBlock communityBlock = new SysAdminCommunityBlock(community);
                 communityBlock.getDeleteButton().addActionListener(e -> {
@@ -290,7 +288,7 @@ public class SysAdminView {
             findCommunitiesPanel.setLayout(new GridLayout());
             findCommunitiesPanel.add(new JLabel("No communities found for the search term"));
         } else {
-            findCommunitiesPanel.setLayout(new BoxLayout(findCommunitiesPanel, BoxLayout.X_AXIS));
+            findCommunitiesPanel.setLayout(new GridLayout(0,3));
             for (Community community : communities) {
                 SysAdminCommunityBlock communityBlock = new SysAdminCommunityBlock(community);
                 communityBlock.getDeleteButton().addActionListener(e -> {
@@ -321,7 +319,7 @@ public class SysAdminView {
             findPeoplePanel.setLayout(new GridLayout());
             findPeoplePanel.add(new JLabel("No people found. Add a person to begin"));
         } else {
-            findPeoplePanel.setLayout(new BoxLayout(findPeoplePanel, BoxLayout.X_AXIS));
+            findPeoplePanel.setLayout(new GridLayout(0,3));
             for (Person person : people) {
                 SysAdminPersonBlock personBlock = new SysAdminPersonBlock(person);
                 personBlock.getDeleteButton().addActionListener(e -> {
@@ -352,7 +350,7 @@ public class SysAdminView {
             findPeoplePanel.setLayout(new GridLayout());
             findPeoplePanel.add(new JLabel("No people found for the search term"));
         } else {
-            findPeoplePanel.setLayout(new BoxLayout(findPeoplePanel, BoxLayout.X_AXIS));
+            findPeoplePanel.setLayout(new GridLayout(0,3));
             for (Person person : people) {
                 SysAdminPersonBlock personBlock = new SysAdminPersonBlock(person);
                 personBlock.getDeleteButton().addActionListener(e -> {
@@ -383,7 +381,7 @@ public class SysAdminView {
             findCommunityAdminsPanel.setLayout(new GridLayout());
             findCommunityAdminsPanel.add(new JLabel("No community admins found. Add a community admin to begin"));
         } else {
-            findCommunityAdminsPanel.setLayout(new BoxLayout(findCommunityAdminsPanel, BoxLayout.X_AXIS));
+            findCommunityAdminsPanel.setLayout(new GridLayout(0,3));
             for (CommunityAdmin communityAdmin : communityAdmins) {
                 SysAdminCommunityAdminBlock communityAdminBlock = new SysAdminCommunityAdminBlock(communityAdmin);
                 communityAdminBlock.getDeleteButton().addActionListener(e -> {
@@ -414,7 +412,7 @@ public class SysAdminView {
             findCommunityAdminsPanel.setLayout(new GridLayout());
             findCommunityAdminsPanel.add(new JLabel("No community admins found for the search term"));
         } else {
-            findCommunityAdminsPanel.setLayout(new BoxLayout(findCommunityAdminsPanel, BoxLayout.X_AXIS));
+            findCommunityAdminsPanel.setLayout(new GridLayout(0,3));
             for (CommunityAdmin communityAdmin : communityAdmins) {
                 SysAdminCommunityAdminBlock communityAdminBlock = new SysAdminCommunityAdminBlock(communityAdmin);
                 communityAdminBlock.getDeleteButton().addActionListener(e -> {
@@ -445,7 +443,7 @@ public class SysAdminView {
             findHospitalsPanel.setLayout(new GridLayout());
             findHospitalsPanel.add(new JLabel("No hospitals found. Add a hospital to begin"));
         } else {
-            findHospitalsPanel.setLayout(new BoxLayout(findHospitalsPanel, BoxLayout.X_AXIS));
+            findHospitalsPanel.setLayout(new GridLayout(0,3));
             for (Hospital hospital : hospitals) {
                 SysAdminHospitalBlock hospitalBlock = new SysAdminHospitalBlock(hospital);
                 findHospitalsPanel.add(hospitalBlock.getMainPanel());
@@ -481,7 +479,7 @@ public class SysAdminView {
             findHospitalsPanel.setLayout(new GridLayout());
             findHospitalsPanel.add(new JLabel("No hospitals found for the search term"));
         } else {
-            findHospitalsPanel.setLayout(new BoxLayout(findHospitalsPanel, BoxLayout.X_AXIS));
+            findHospitalsPanel.setLayout(new GridLayout(0,3));
             for (Hospital hospital : hospitals) {
                 SysAdminHospitalBlock hospitalBlock = new SysAdminHospitalBlock(hospital);
                 findHospitalsPanel.add(hospitalBlock.getMainPanel());
@@ -518,7 +516,7 @@ public class SysAdminView {
             findDoctorsPanel.setLayout(new GridLayout());
             findDoctorsPanel.add(new JLabel("No doctors found"));
         } else {
-            findDoctorsPanel.setLayout(new BoxLayout(findDoctorsPanel, BoxLayout.X_AXIS));
+            findDoctorsPanel.setLayout(new GridLayout(0,3));
             for (Doctor doctor : doctors) {
                 SysAdminDoctorBlock doctorBlock = new SysAdminDoctorBlock(doctor);
                 findDoctorsPanel.add(doctorBlock.getMainPanel());
@@ -554,7 +552,7 @@ public class SysAdminView {
             findDoctorsPanel.setLayout(new GridLayout());
             findDoctorsPanel.add(new JLabel("No doctors found for the search term"));
         } else {
-            findDoctorsPanel.setLayout(new BoxLayout(findDoctorsPanel, BoxLayout.X_AXIS));
+            findDoctorsPanel.setLayout(new GridLayout(0,3));
             for (Doctor doctor : doctors) {
                 SysAdminDoctorBlock doctorBlock = new SysAdminDoctorBlock(doctor);
                 findDoctorsPanel.add(doctorBlock.getMainPanel());
@@ -591,7 +589,7 @@ public class SysAdminView {
             findPatientsPanel.setLayout(new GridLayout());
             findPatientsPanel.add(new JLabel("No patients found"));
         } else {
-            findPatientsPanel.setLayout(new BoxLayout(findPatientsPanel, BoxLayout.X_AXIS));
+            findPatientsPanel.setLayout(new GridLayout(0,3));
             for (Patient patient : patients) {
                 SysAdminPatientBlock patientBlock = new SysAdminPatientBlock(patient);
                 findPatientsPanel.add(patientBlock.getMainPanel());
@@ -627,7 +625,7 @@ public class SysAdminView {
             findPatientsPanel.setLayout(new GridLayout());
             findPatientsPanel.add(new JLabel("No patients found for the search term"));
         } else {
-            findPatientsPanel.setLayout(new BoxLayout(findPatientsPanel, BoxLayout.X_AXIS));
+            findPatientsPanel.setLayout(new GridLayout(0,3));
             for (Patient patient : patients) {
                 SysAdminPatientBlock patientBlock = new SysAdminPatientBlock(patient);
                 findPatientsPanel.add(patientBlock.getMainPanel());
@@ -664,7 +662,7 @@ public class SysAdminView {
             findAppointmentsPanel.setLayout(new GridLayout());
             findAppointmentsPanel.add(new JLabel("No appointments found"));
         } else {
-            findAppointmentsPanel.setLayout(new BoxLayout(findAppointmentsPanel, BoxLayout.X_AXIS));
+            findAppointmentsPanel.setLayout(new GridLayout(0,3));
             for (Appointment appointment : appointments) {
                 SysAdminAppointmentBlock appointmentBlock = new SysAdminAppointmentBlock(appointment);
                 findAppointmentsPanel.add(appointmentBlock.getMainPanel());
@@ -700,7 +698,7 @@ public class SysAdminView {
             findAppointmentsPanel.setLayout(new GridLayout());
             findAppointmentsPanel.add(new JLabel("No appointments found for the search term"));
         } else {
-            findAppointmentsPanel.setLayout(new BoxLayout(findAppointmentsPanel, BoxLayout.X_AXIS));
+            findAppointmentsPanel.setLayout(new GridLayout(0,3));
             for (Appointment appointment : appointments) {
                 SysAdminAppointmentBlock appointmentBlock = new SysAdminAppointmentBlock(appointment);
                 findAppointmentsPanel.add(appointmentBlock.getMainPanel());

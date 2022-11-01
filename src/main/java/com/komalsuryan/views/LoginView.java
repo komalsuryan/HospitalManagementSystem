@@ -1,7 +1,7 @@
 package com.komalsuryan.views;
 
-import com.komalsuryan.UserTypes;
 import com.komalsuryan.Database;
+import com.komalsuryan.UserTypes;
 
 import javax.swing.*;
 
@@ -19,7 +19,7 @@ public class LoginView {
 
     private final Database db;
 
-    public LoginView(JFrame currentJframe) {
+    public LoginView(JFrame currentJFrame) {
         db = new Database();
         loginPanelHeading.setText("Welcome to the Hospital Management System. Login to continue");
         loginEmailLabel.setText("Email: ");
@@ -34,22 +34,34 @@ public class LoginView {
         loginButton.setText("Login");
         browseAnonButton.setText("Browse without logging in");
 
-        loginButton.addActionListener(e -> onLogin(currentJframe));
-        browseAnonButton.addActionListener(e -> onBrowseAnon(currentJframe));
+        // add enter key listener on dialog
+        mainPanel.registerKeyboardAction(e -> {
+            if (loginEmailValue.getText().isEmpty() && loginPasswordValue.getPassword().length == 0) {
+                browseAnonButton.doClick();
+            } else {
+                loginButton.doClick();
+            }
+        }, KeyStroke.getKeyStroke("ENTER"), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+        loginButton.addActionListener(e -> onLogin(currentJFrame));
+        browseAnonButton.addActionListener(e -> onBrowseAnon(currentJFrame));
     }
 
-    private void onLogin(JFrame currentJframe) {
+    private void onLogin(JFrame currentJFrame) {
         // get values
         String email = loginEmailValue.getText();
-        String password = loginPasswordValue.getText();
+        // get string from password field
+        String password = new String(loginPasswordValue.getPassword());
         String userType = (String) loginTypesComboBox.getSelectedItem();
-        UserTypes type = UserTypes.valueOf(userType);
+        // get the enum from its string representation
+        assert userType != null;
+        UserTypes type = UserTypes.valueOf(userType.toUpperCase().replace(" ", "_"));
 
         // validate values
         int userId = new Database().validate(email, password, type);
 
         if (userId == -1) {
-            throw new IllegalArgumentException("Invalid credentials");
+            throw new IllegalArgumentException("Invalid credentials. Check your email, password or user type");
         }
 
         if (type == UserTypes.SYSTEM_ADMIN) {
@@ -59,7 +71,7 @@ public class LoginView {
             systemAdminFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
             systemAdminFrame.pack();
             systemAdminFrame.setVisible(true);
-            currentJframe.dispose();
+            currentJFrame.dispose();
         } else if (type == UserTypes.COMMUNITY_ADMIN) {
             JFrame communityAdminFrame = new JFrame("Community Admin");
             communityAdminFrame.setContentPane(new CommunityAdminView(db.getCommunityAdmin(userId)).getMainPanel());
@@ -67,7 +79,7 @@ public class LoginView {
             communityAdminFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
             communityAdminFrame.pack();
             communityAdminFrame.setVisible(true);
-            currentJframe.dispose();
+            currentJFrame.dispose();
         } else if (type == UserTypes.DOCTOR) {
             JFrame doctorFrame = new JFrame("Doctor");
             doctorFrame.setContentPane(new DoctorView(db.getDoctor(userId)).getMainPanel());
@@ -75,7 +87,7 @@ public class LoginView {
             doctorFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
             doctorFrame.pack();
             doctorFrame.setVisible(true);
-            currentJframe.dispose();
+            currentJFrame.dispose();
         } else if (type == UserTypes.PATIENT) {
             JFrame patientFrame = new JFrame("Patient");
             patientFrame.setContentPane(new PatientView(db.getPatient(userId)).getMainPanel());
@@ -83,18 +95,18 @@ public class LoginView {
             patientFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
             patientFrame.pack();
             patientFrame.setVisible(true);
-            currentJframe.dispose();
+            currentJFrame.dispose();
         }
     }
 
-    private void onBrowseAnon(JFrame currentJframe) {
+    private void onBrowseAnon(JFrame currentJFrame) {
         JFrame anonFrame = new JFrame("Browse Anonymously");
         anonFrame.setContentPane(new PersonView().getMainPanel());
         anonFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         anonFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         anonFrame.pack();
         anonFrame.setVisible(true);
-        currentJframe.dispose();
+        currentJFrame.dispose();
     }
 
     public JPanel getMainPanel() {

@@ -2,6 +2,7 @@ package com.komalsuryan;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -25,7 +26,21 @@ public class Appointment {
         this.date = date;
         this.doctorId = doctorId;
         this.time = time;
-        this.reason = reason;
+        if (isDoctorAvailable(doctorId, date, time)) {
+            this.time = time;
+        } else {
+            throw new IllegalArgumentException("The doctor is not available at this time");
+        }
+        if (doesPatientHaveAppointment(patientId, date, time)) {
+            this.time = time;
+        } else {
+            throw new IllegalArgumentException("The patient already has an appointment at this time");
+        }
+        if (isReasonValid(reason)) {
+            this.reason = reason;
+        } else {
+            throw new IllegalArgumentException("The reason is not valid");
+        }
         this.vitals = vitals;
         this.diagnosis = diagnosis;
         this.treatment = treatment;
@@ -80,7 +95,11 @@ public class Appointment {
     }
 
     public void setReason(String reason) {
-        this.reason = reason;
+        if (isReasonValid(reason)) {
+            this.reason = reason;
+        } else {
+            throw new IllegalArgumentException("The reason is not valid");
+        }
     }
 
     public HashMap<String, String> getVitals() {
@@ -105,5 +124,32 @@ public class Appointment {
 
     public void setTreatment(String treatment) {
         this.treatment = treatment;
+    }
+
+    private boolean isReasonValid(String reason) {
+        return reason.length() > 0;
+    }
+
+    private boolean isDoctorAvailable(int doctorId, LocalDate date, LocalTime time) {
+        Doctor doctor = new Database().getDoctor(doctorId);
+        if (date.getDayOfWeek() == doctor.getWeeklyOffDay()) {
+            return false;
+        }
+        if (time.isBefore(doctor.getStartTime()) || time.isAfter(doctor.getEndTime())) {
+            return false;
+        }
+        ArrayList<Appointment> appointments = new Database().getAllAppointments();
+        appointments.removeIf(appointment -> appointment.getDoctorId() != doctorId);
+        appointments.removeIf(appointment -> appointment.getDate() != date);
+        appointments.removeIf(appointment -> appointment.getTime() != time);
+        return appointments.size() < doctor.getMaxPatientsPerHour();
+    }
+
+    private boolean doesPatientHaveAppointment(int patientId, LocalDate date, LocalTime time) {
+        ArrayList<Appointment> appointments = new Database().getAllAppointments();
+        appointments.removeIf(appointment -> appointment.getPatientId() != patientId);
+        appointments.removeIf(appointment -> appointment.getDate() != date);
+        appointments.removeIf(appointment -> appointment.getTime() != time);
+        return appointments.size() > 0;
     }
 }

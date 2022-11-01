@@ -4,6 +4,8 @@ import com.komalsuryan.*;
 import com.komalsuryan.views.sysAdminViewUiElements.AddAppointmentDialog;
 import com.komalsuryan.*;
 import com.komalsuryan.views.personViewUiElements.PersonDoctorBlock;
+import com.komalsuryan.views.sysAdminViewUiElements.AddPersonDialog;
+import com.komalsuryan.views.sysAdminViewUiElements.EditPatientDialog;
 import com.komalsuryan.views.sysAdminViewUiElements.SysAdminAppointmentBlock;
 
 import javax.swing.*;
@@ -37,9 +39,11 @@ public class PatientView {
     private JLabel pastAppointmentsLabel;
     private JPanel pastAppointmentsPanel;
     private final Database db;
+    private final Patient patient;
 
     public PatientView(Patient patient) {
         db = new Database();
+        this.patient = patient;
         welcomeLabel.setText("Welcome, Find doctors at your location");
         communitySelectLabel.setText("Select Community");
         // populate the community select combo box
@@ -48,6 +52,21 @@ public class PatientView {
         for (Community community : communities) {
             communitySelectComboBox.addItem(community.getName());
         }
+
+        editDetailsButton.setText("Edit Details");
+        editDetailsButton.addActionListener(e -> {
+            AddPersonDialog addPersonDialog = new AddPersonDialog(patient);
+            addPersonDialog.pack();
+            addPersonDialog.setVisible(true);
+        });
+
+        editLoginButton.setText("Edit Login");
+        editLoginButton.addActionListener(e -> {
+            EditPatientDialog editPatientDialog = new EditPatientDialog(patient);
+            editPatientDialog.pack();
+            editPatientDialog.setVisible(true);
+        });
+
         logoutPatientButton.setText("Logout");
         logoutPatientButton.addActionListener(e -> {
             JFrame jFrame = new JFrame("Hospital Management System");
@@ -112,6 +131,11 @@ public class PatientView {
         findDoctorsPanel.setLayout(new GridLayout(0, 3));
         for (Doctor doctor : doctors) {
             PersonDoctorBlock doctorBlock = new PersonDoctorBlock(doctor);
+            doctorBlock.getViewBookDoctorButton().addActionListener(e -> {
+                AddAppointmentDialog addAppointmentDialog = new AddAppointmentDialog(patient, doctor, true);
+                addAppointmentDialog.pack();
+                addAppointmentDialog.setVisible(true);
+            });
             findDoctorsPanel.add(doctorBlock.getMainPanel());
         }
         findDoctorsPanel.revalidate();
@@ -162,7 +186,7 @@ public class PatientView {
             upcomingAppointmentsPanel.setLayout(new GridLayout());
             upcomingAppointmentsPanel.add(noUpcomingAppointmentsLabel);
         } else {
-            upcomingAppointmentsPanel.setLayout(new GridLayout(0, 1));
+            upcomingAppointmentsPanel.setLayout(new GridLayout(0, 3));
             for (Appointment appointment : upcomingAppointments) {
                 Doctor doctor = db.getDoctor(appointment.getDoctorId());
                 SysAdminAppointmentBlock appointmentBlock = new SysAdminAppointmentBlock(appointment);

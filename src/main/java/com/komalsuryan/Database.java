@@ -47,6 +47,9 @@ public class Database {
         // create the hospitals.json file if it does not exist
         FileIO.createFile("hospitals");
 
+        // create the hospitalAdmins.json file if it does not exist
+        FileIO.createFile("hospitalAdmins");
+
         // create the doctors.json file if it does not exist
         FileIO.createFile("doctors");
 
@@ -385,7 +388,7 @@ public class Database {
         ArrayList<Hospital> hospitals = getAllHospitals();
         ArrayList<Hospital> results = new ArrayList<>();
         for (Hospital hospital : hospitals) {
-            if (hospital.getName().toLowerCase().contains(search.toLowerCase())) {
+            if (hospital.getName().toLowerCase().contains(search.toLowerCase()) || hospital.getLocation().toLowerCase().contains(search.toLowerCase())) {
                 results.add(hospital);
             }
         }

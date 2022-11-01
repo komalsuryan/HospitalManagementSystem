@@ -39,4 +39,8 @@ public class PersonDoctorBlock {
     public JPanel getMainPanel() {
         return mainPanel;
     }
+
+    public JButton getViewBookDoctorButton() {
+        return viewBookDoctorButton;
+    }
 }

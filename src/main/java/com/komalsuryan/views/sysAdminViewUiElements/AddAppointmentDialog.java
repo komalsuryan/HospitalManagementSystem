@@ -277,14 +277,15 @@ public class AddAppointmentDialog extends JDialog {
 
     public AddAppointmentDialog(Patient patient, Doctor doctor, boolean isUser) {
         this(isUser);
+        final Database db = new Database();
         addAppointmentHeadingLabel.setText("Add Appointment");
-        personCommunityComboBox.setSelectedItem(new Database().getCommunity(patient.getCommunityId()).getName());
+        personCommunityComboBox.setSelectedItem(db.getCommunity(patient.getCommunityId()).getName());
         personCommunityComboBox.setEnabled(false);
         personSsnComboBox.setSelectedItem(patient.getSsNumber());
         personSsnComboBox.setEnabled(false);
-        doctorCommunityComboBox.setSelectedItem(new Database().getCommunity(doctor.getHospitalId()).getName());
+        doctorCommunityComboBox.setSelectedItem(db.getCommunity(db.getHospital(doctor.getHospitalId()).getCommunityId()).getName());
         doctorCommunityComboBox.setEnabled(false);
-        doctorHospitalComboBox.setSelectedItem(new Database().getHospital(doctor.getHospitalId()).getName());
+        doctorHospitalComboBox.setSelectedItem(db.getHospital(doctor.getHospitalId()).getName());
         doctorHospitalComboBox.setEnabled(false);
         doctorNameComboBox.setSelectedItem(doctor.getName());
         doctorNameComboBox.setEnabled(false);

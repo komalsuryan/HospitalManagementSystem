@@ -12,7 +12,8 @@ public enum UserTypes {
         this.userType = userType;
     }
 
-    public String getUserType() {
+    @Override
+    public String toString() {
         return userType;
     }
 
