@@ -79,6 +79,7 @@ public class DoctorView {
             findUpcomingAppointmentsPanel.setLayout(new GridLayout());
             findUpcomingAppointmentsPanel.add(noUpcomingAppointmentsLabel);
         } else {
+            findUpcomingAppointmentsPanel.setLayout(new GridLayout(0, 3));
             for (Appointment appointment : upcomingAppointments) {
                 Patient patient = db.getPatient(appointment.getPatientId());
                 SysAdminAppointmentBlock appointmentBlock = new SysAdminAppointmentBlock(appointment);
@@ -119,6 +120,7 @@ public class DoctorView {
             findPastAppointments.setLayout(new GridLayout());
             findPastAppointments.add(noPastAppointmentsLabel);
         } else {
+            findPastAppointments.setLayout(new GridLayout(0,3));
             for (Appointment appointment : pastAppointments) {
                 Patient patient = db.getPatient(appointment.getPatientId());
                 SysAdminAppointmentBlock appointmentBlock = new SysAdminAppointmentBlock(appointment);
@@ -156,11 +158,12 @@ public class DoctorView {
             viewPatientsPanel.setLayout(new GridLayout());
             viewPatientsPanel.add(noPatientsLabel);
         } else {
+            viewPatientsPanel.setLayout(new GridLayout(0, 3));
             for (Patient patient : doctorPatients) {
                 DoctorPatientBlock patientBlock = new DoctorPatientBlock(doctor, patient);
                 viewPatientsPanel.add(patientBlock.getMainPanel());
                 patientBlock.getScheduleAppointmentButton().addActionListener(e -> {
-                    AddAppointmentDialog addAppointmentDialog = new AddAppointmentDialog(patient, doctor, true);
+                    AddAppointmentDialog addAppointmentDialog = new AddAppointmentDialog(patient, doctor, false);
                     addAppointmentDialog.pack();
                     addAppointmentDialog.setVisible(true);
                     createUpcomingAppointmentBlocks(doctor);

@@ -213,14 +213,9 @@ public class AddAppointmentDialog extends JDialog {
 
         // if user is the normal user, disable the doctor fields
         if (isUser) {
-            appointmentVitals1Label.setEnabled(false);
-            appointmentVitals2Label.setEnabled(false);
-            appointmentVItals3Label.setEnabled(false);
             appointmentVital1textField.setEnabled(false);
             appointmentVital2TextField.setEnabled(false);
             appointmentVital3TextField.setEnabled(false);
-            appointmentDiagnosis.setEnabled(false);
-            appointmentTreatment.setEnabled(false);
             appointmentDiagnosisTextArea.setEnabled(false);
             appointmentTreatmentTextArea.setEnabled(false);
         }
@@ -356,8 +351,7 @@ public class AddAppointmentDialog extends JDialog {
         int hospitalId = new Database().getAllHospitals().stream().filter(hospital -> hospital.getName().equals(hospitalName) && hospital.getCommunityId() == communityId).findFirst().get().getId();
         // get doctor id
         int doctorId = new Database().getAllDoctors().stream().filter(doctor -> doctor.getName().equals(doctorName) && doctor.getHospitalId() == hospitalId).findFirst().get().getId();
-        String appointmentDate = appointmentDateValueChooser.getDate().toString();
-        LocalDate date = LocalDate.parse(appointmentDate);
+        LocalDate date = appointmentDateValueChooser.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         String appointmentTime = (String) appointmentTimeComboBox.getSelectedItem();
         if (appointmentTime == null) {
             JOptionPane.showMessageDialog(null, "Please select a time");
@@ -392,6 +386,23 @@ public class AddAppointmentDialog extends JDialog {
         appointment.setTreatment(appointmentTreatment);
         new Database().updateAppointment(appointment);
         dispose();
+    }
+
+    public void setViewOnly() {
+        personCommunityComboBox.setEditable(false);
+        personSsnComboBox.setEditable(false);
+        doctorNameComboBox.setEditable(false);
+        doctorHospitalComboBox.setEditable(false);
+        doctorCommunityComboBox.setEditable(false);
+        appointmentDateValueChooser.setEnabled(false);
+        appointmentTimeComboBox.setEditable(false);
+        appointmentReasontextArea.setEditable(false);
+        appointmentVital1textField.setEditable(false);
+        appointmentVital2TextField.setEditable(false);
+        appointmentVital3TextField.setEditable(false);
+        appointmentDiagnosisTextArea.setEditable(false);
+        appointmentTreatmentTextArea.setEditable(false);
+        buttonOK.setVisible(false);
     }
 
     private void onCancel() {
